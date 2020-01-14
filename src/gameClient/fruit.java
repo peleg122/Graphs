@@ -5,20 +5,22 @@ import utils.Point3D;
 
 import javax.swing.*;
 
+/**
+ * This class represents Fruit- target on space every fruit have id, point3D,weight
+ * /////////Attention!!: should be time, time(the time that he were eaten in).
+ * @author Amir Hoshen
+ * @author Peleg Zoborovsky
+ */
+
 public class fruit {
-    /**
-     * This class represents Fruit- target on space every fruit have id, point3D,weight
-     * /////////Attention!!: should be time, time(the time that he were eaten in).
-     * @author Amir Hoshen
-     * @author Peleg Zoborovsky
-     */
-    private int ID;
-    private Point3D pos;
-    private double type;
-    private double value;
+
+    private int _ID;
+    private Point3D _pos;
+    private double _type;
+    private double _value;
     private boolean _occupied = false;
-    private edge_data edge;
-    private ImageIcon fruitimage;
+    private edge_data _edge;
+    private ImageIcon _fruitimage;
     /**
      * Regular constractor.
      * @param ID the fruit number
@@ -29,9 +31,9 @@ public class fruit {
      */
     public fruit(int ID, double x, double y, double z, double weight) {
         setID(ID);
-        setPos(new Point3D(x, y,z));
-        setValue(weight);
-        setFruitimage(new ImageIcon("cherry.png"));
+        set_pos(new Point3D(x, y,z));
+        set_value(weight);
+        set_fruitimage(new ImageIcon(String.valueOf(this._fruitimage)));
     }
     /**
      * Regular constractor
@@ -41,9 +43,9 @@ public class fruit {
      */
     public fruit(int ID, Point3D P, double weight) {
         setID(ID);
-        setPos(P);
-        setValue(weight);
-        setFruitimage(new ImageIcon("cherry.png"));
+        set_pos(P);
+        set_value(weight);
+        set_fruitimage(new ImageIcon("cherry.png"));
     }
     /**
      * Copy constractor.
@@ -52,39 +54,52 @@ public class fruit {
     public fruit(fruit ot) {
         if(ot==null)throw new IllegalArgumentException("fruit cant be null");
         setID(ot.getID());
-        setPos(new Point3D(ot.getPos()));
-        setValue(ot.getValue());
-        setFruitimage(ot.getFruitimage());
+        set_pos(new Point3D(ot.get_pos()));
+        set_value(ot.get_value());
+        set_fruitimage(ot.get_fruitimage());
     }
-    public ImageIcon getFruitimage() {//getters and setters
-        return fruitimage;
+    public ImageIcon get_fruitimage() {//getters and setters
+        return _fruitimage;
     }
-    public void setFruitimage(ImageIcon fruitimage) {
-        this.fruitimage = fruitimage;
+
+    /**
+     * setting the fruit image
+     * if this fruit type is 1 image icon will be banana
+     * if this fruit type is -1 image icon will be apple.
+     * @param _fruitimage the fruit choice by criterion(1 or -1)
+     */
+    public void set_fruitimage(ImageIcon _fruitimage) {
+        if(this._type ==1){
+            this._fruitimage = new ImageIcon("banana.png");//banana
+        }else if(this._type ==-1){
+            this._fruitimage = new ImageIcon("apple.png");//apple
+        }else {
+            throw new IllegalArgumentException("fruit type can be only 1 or -1");
+        }
     }
     public int getID() {
-        return ID;
+        return  _ID;
     }
     public void setID(int iD) {
-        ID = iD;
+        _ID = iD;
     }
-    public Point3D getPos() {
-        return pos;
+    public Point3D get_pos() {
+        return _pos;
     }
-    public void setPos(Point3D orient) {
-        pos = orient;
+    public void set_pos(Point3D orient) {
+        _pos = orient;
     }
-    public double getType() {
-        return type;
+    public double get_type() {
+        return _type;
     }
-    public void setType(double type) {
-        this.type = type;
+    public void set_type(double _type) {
+        this._type = _type;
     }
-    public void setValue(double value){
-        this.value = value;
+    public void set_value(double _value){
+        this._value = _value;
     }
-    public double getValue(){
-        return value;
+    public double get_value(){
+        return _value;
     }
     public void set_occupied(boolean occupied){
         this._occupied = occupied;
@@ -98,6 +113,6 @@ public class fruit {
      * @return string of the Fruit.
      */
     public String toString() {
-        return ID+","+pos.toString()+","+value;
+        return _ID+","+ _pos.toString()+","+ _value;
     }
 }
