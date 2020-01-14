@@ -1,4 +1,7 @@
 package gameClient;
 
-public class MyGameGUI {
+
+public class MyGameGUI  {
+
+
 }
