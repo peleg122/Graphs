@@ -72,6 +72,7 @@ public class fruit {
         _ID++;
         set_pos(new Point3D(ot.get_pos()));
         set_value(ot.get_value());
+        set_type(ot.get_type());
         set_fruitimage(ot.get_fruitimage());
     }
     public ImageIcon get_fruitimage() {//getters and setters
@@ -101,14 +102,6 @@ public class fruit {
     public int getID() {
         return  _ID;
     }
-
-    /**
-     * setting the fruit ID
-     * @param ID of the fruit
-     */
-//    public void setID(int ID) {
-//        this._ID = ID;
-//    }
 
     /**
      * this fruit position
