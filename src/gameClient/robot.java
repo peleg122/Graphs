@@ -5,7 +5,7 @@ import utils.Point3D;
 
 import javax.swing.*;
 
-public class bot implements Robot {
+public class robot implements Robot {
 
     private int _ID;
     private boolean _occupied = false;
