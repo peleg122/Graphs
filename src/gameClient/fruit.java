@@ -6,7 +6,8 @@ import javax.swing.*;
 
 public class fruit {
     /**
-     * This class represents Fruit- target on space every fruit have id, point3D,weight and time(the time that he were eaten in).
+     * This class represents Fruit- target on space every fruit have id, point3D,weight
+     * /////////Attention!!: should be time, time(the time that he were eaten in).
      * @author Bar Genish
      * @author Elyashiv Deri
      * @author lioz elmalem
