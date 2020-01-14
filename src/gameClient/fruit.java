@@ -66,44 +66,104 @@ public class fruit {
      * setting the fruit image
      * if this fruit type is 1 image icon will be banana
      * if this fruit type is -1 image icon will be apple.
-     * @param _fruitimage the fruit choice by criterion(1 or -1)
+     * @param fruitimage the fruit choice by criterion(1 ||-1)
      */
-    public void set_fruitimage(ImageIcon _fruitimage) {
+    public void set_fruitimage(ImageIcon fruitimage) {
         if(this._type ==1){
             this._fruitimage = new ImageIcon("banana.png");//banana
         }else if(this._type ==-1){
             this._fruitimage = new ImageIcon("apple.png");//apple
         }else {
-            throw new IllegalArgumentException("fruit type can be only 1 or -1");
+            throw new IllegalArgumentException("fruit type can be only 1 || -1");
         }
     }
+
+    /**
+     * this fruit ID
+     * @return ID
+     */
     public int getID() {
         return  _ID;
     }
-    public void setID(int iD) {
-        _ID = iD;
+
+    /**
+     * setting the fruit ID
+     * @param ID of the fruit
+     */
+    public void setID(int ID) {
+        this._ID = ID;
     }
+
+    /**
+     * this fruit position
+     * @return Point3D _pos (position of the fruit)
+     */
     public Point3D get_pos() {
         return _pos;
     }
-    public void set_pos(Point3D orient) {
-        _pos = orient;
+
+    /**
+     * setting the fruit position (Point3D)
+     * @param position
+     */
+    public void set_pos(Point3D position) {
+        _pos = position;
     }
+
+    /**
+     * the fruit type represented by two options
+     * -1 is an apple
+     * 1 is banana
+     * @return the fruit type(int== -1||1)
+     */
     public double get_type() {
         return _type;
     }
-    public void set_type(double _type) {
-        this._type = _type;
+
+    /**
+     * setting this fruit type
+     * 1 or -1, otherwise exceptions will thrown
+     * @param type (should be 1 || -1).
+     */
+    public void set_type(double type) {
+        if(type==1||type==-1)this._type = type;
+        else
+            throw new IllegalArgumentException("the fruit type can be only 1 || -1");
     }
+
+    /**
+     * each fruit can have a different value
+     * when the robot collect the fruits the robot criteria money(value) will be added.
+     * @param _value this fruit value.
+     */
     public void set_value(double _value){
         this._value = _value;
     }
+
+    /**
+     * getting this fruit value
+     * @return this value.
+     */
     public double get_value(){
         return _value;
     }
+
+    /**
+     * this method will be used in MyGameGUI..
+     * if a robot from the list is allready heading towards this fruit
+     * we will say that this fruit is occupied such that other robots wont waste
+     * any time heading towards targeted fruits.
+     * @param occupied - true- robot is on his way towards the fruit
+     *                 -false- this fruit is a target.
+     */
     public void set_occupied(boolean occupied){
         this._occupied = occupied;
     }
+
+    /**
+     * @return true if a robot is on his way towards this fruit
+     *         false otherwise.
+     */
     public boolean get_Occupied(){
         return _occupied;
     }
