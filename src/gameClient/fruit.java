@@ -1,5 +1,6 @@
 package gameClient;
 
+import dataStructure.edge_data;
 import utils.Point3D;
 
 import javax.swing.*;
@@ -16,6 +17,8 @@ public class fruit {
     private Point3D pos;
     private double type;
     private double value;
+    private boolean _occupied = false;
+    private edge_data edge;
     private ImageIcon fruitimage;
     /**
      * Regular constractor.
@@ -84,6 +87,13 @@ public class fruit {
     public double getValue(){
         return value;
     }
+    public void set_occupied(boolean occupied){
+        this._occupied = occupied;
+    }
+    public boolean get_Occupied(){
+        return _occupied;
+    }
+
     /**
      * write the Fruit as string.
      * @return string of the Fruit.
