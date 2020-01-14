@@ -14,7 +14,7 @@ import javax.swing.*;
 
 public class fruit {
 
-    private int _ID;
+    private static int _ID=0;
     private Point3D _pos;
     private double _type;
     private double _value;
@@ -23,14 +23,13 @@ public class fruit {
     private ImageIcon _fruitimage;
     /**
      * Regular constractor.
-     * @param ID the fruit number
      * @param x the x point of the fruit
      * @param y the y point of the fruit
      * @param z the z point of the fruit
      * @param value of the fruit
      */
-    public fruit(int ID, double x, double y, double z, double value) {
-        setID(ID);
+    public fruit(double x, double y, double z, double value) {
+        _ID++;
         set_pos(new Point3D(x, y,z));
         set_value(value);
         set_fruitimage(new ImageIcon(String.valueOf(get_fruitimage())));
@@ -38,42 +37,27 @@ public class fruit {
 
     /**
      * fruit constructor
-     * @param ID this fruit ID
      * @param x this fruit position on x axis
      * @param y this fruit position on y axis
      * @param z this fruit position on z axis
      * @param value this fruit value
      * @param type (apple(-1) || banana(1))
      */
-    public fruit(int ID, double x, double y, double z, double value, double type) {
-        setID(ID);
+    public fruit(double x, double y, double z, double value, double type) {
+        _ID++;
         set_pos(new Point3D(x, y,z));
         set_value(value);
         set_type(type);
         set_fruitimage(new ImageIcon(String.valueOf(get_fruitimage())));
     }
     /**
-     * Regular constractor
-     * @param ID the number of the fruit
-     * @param P the point of the fruit
-     * @param value of the fruit
-     */
-    public fruit(int ID, Point3D P, double value) {
-        setID(ID);
-        set_pos(P);
-        set_value(value);
-        set_fruitimage(new ImageIcon(String.valueOf(get_fruitimage())));
-    }
-
-    /**
      * fruit constructor
-     * @param ID of this fruit.
      * @param P Point3D position on the graph edge.
      * @param value this fruit value.
      * @param type this fruit type(apple(-1) || banana(1)).
      */
-    public fruit(int ID, Point3D P, double value, double type) {
-        setID(ID);
+    public fruit(Point3D P, double value, double type) {
+        _ID++;
         set_pos(P);
         set_value(value);
         set_type(type);
@@ -85,7 +69,7 @@ public class fruit {
      */
     public fruit(fruit ot) {
         if(ot==null)throw new IllegalArgumentException("fruit cant be null");
-        setID(ot.getID());
+        _ID++;
         set_pos(new Point3D(ot.get_pos()));
         set_value(ot.get_value());
         set_fruitimage(ot.get_fruitimage());
@@ -122,9 +106,9 @@ public class fruit {
      * setting the fruit ID
      * @param ID of the fruit
      */
-    public void setID(int ID) {
-        this._ID = ID;
-    }
+//    public void setID(int ID) {
+//        this._ID = ID;
+//    }
 
     /**
      * this fruit position
@@ -205,6 +189,6 @@ public class fruit {
      * @return string of the Fruit.
      */
     public String toString() {
-        return _ID+","+ _pos.toString()+","+ _value;
+        return _pos.toString()+","+ _value+" ,"+_type;
     }
 }
