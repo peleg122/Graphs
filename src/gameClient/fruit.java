@@ -48,8 +48,9 @@ public class fruit {
      * @param ot create a deep copy of ot fruit
      */
     public fruit(fruit ot) {
+        if(ot==null)throw new IllegalArgumentException("fruit cant be null");
         setID(ot.getID());
-        setPos(ot.getPos());
+        setPos(new Point3D(ot.getPos()));
         setValue(ot.getValue());
         setFruitimage(ot.getFruitimage());
     }
@@ -88,6 +89,6 @@ public class fruit {
      * @return string of the Fruit.
      */
     public String toString() {
-        return ID+","+pos.toString()+","+type;
+        return ID+","+pos.toString()+","+value;
     }
 }
