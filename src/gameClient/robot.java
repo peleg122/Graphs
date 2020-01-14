@@ -80,8 +80,5 @@ public class robot implements Robot {
         return null;
     }
 
-    //to JSON return string
-    //Json to string
-
 
 }
