@@ -43,6 +43,9 @@ public class MyGameGUI {
             level = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter Level (0-23): "));
         }
         _game_service =  _game_server.getServer(level);
+        _dGraph = new DGraph(_game_service.getGraph());
+        _graph_algo = new Graph_Algo(_dGraph);
+
     }
 
     public static void main(String[] args) {
