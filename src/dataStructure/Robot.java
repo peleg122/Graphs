@@ -23,7 +23,7 @@ public interface Robot {
 
     double getMoney();
 
-    Point3D getLocation();
+    Point3D getPointLocation();
 
     long getSpeed();
 
