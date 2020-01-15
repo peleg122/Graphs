@@ -2,7 +2,6 @@ package gameClient;
 
 
 import Server.Game_Server;
-import Server.game_service;
 import algorithms.Graph_Algo;
 import dataStructure.DGraph;
 import org.json.JSONObject;
@@ -16,7 +15,6 @@ public class MyGameGUI {
     private int _numberOfFruits;
     private HashMap<Integer, fruit> _allFruits;
     private HashMap<Integer, robot> _allRobots;
-    private game_service _game_service;
     private Game_Server _game_server;
     private String _graph;
     private DGraph _dGraph;
@@ -32,18 +30,15 @@ public class MyGameGUI {
     }
 
     public void init() {
+        Object[] levels = {"0", "1", "3", "4", "5", "6",
+                "7", "8", "9", "10", "11", "12",
+                "13", "14", "15", "16", "17", "18",
+                "19", "20", "21", "22", "23"};
+        int level = Integer.parseInt((String) JOptionPane.showInputDialog(null, "Choose Level: [0,23] ", "level", JOptionPane.QUESTION_MESSAGE, null, levels, null));
 
-        String s = JOptionPane.showInputDialog(null, "Enter Level (0-23): ");
-        int level=-1;
-        if(s.equals(null) || s.equals("")){
-            level=0;
-        }
-
-        while (level < 0 || level > 23 && !s.isEmpty()) {
-            level = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter Level (0-23): "));
-        }
-        _game_service =  _game_server.getServer(level);
-        _dGraph = new DGraph(_game_service.getGraph());
+        _game_server = (Game_Server) _game_server.getServer(level);
+        _dGraph = new DGraph();
+        _dGraph.init(_game_server.getGraph());
         _graph_algo = new Graph_Algo(_dGraph);
 
     }
