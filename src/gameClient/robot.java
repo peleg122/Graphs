@@ -1,5 +1,6 @@
 package gameClient;
 
+import dataStructure.DGraph;
 import dataStructure.Robot;
 import utils.Point3D;
 import utils.StdDraw;
@@ -8,21 +9,27 @@ import javax.swing.*;
 
 public class robot extends JFrame implements Robot {
 
-    private int _ID;
+    private static int _id = 0;
+    private int _src;
+    private int _dest;
     private boolean _occupied = false;
     private double _money = 0;
     private Point3D _location;
-    public final ImageIcon _robocop = new ImageIcon("robot.png");
+    //public final ImageIcon _robocop = new ImageIcon("utils/robot.png");
 
 
-    public robot(int id){
-        this._ID = id;
+    public robot(int key){
+        _id++;
+        this._src = key;
+        this._dest = -1;
     }
     @Override
     public void init() {
 
     }
-
+    public void location(DGraph graph){
+        this._location = graph.getNode(this._src).getLocation();
+    }
     @Override
     public String toJSON() {
         return null;
@@ -65,9 +72,9 @@ public class robot extends JFrame implements Robot {
 
     @Override
     public Point3D getPointLocation() {
-        Point3D p = new Point3D(0,0,0);
-        return  p;
+        return _location;
     }
+
 
     @Override
     public long getSpeed() {

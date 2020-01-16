@@ -1,5 +1,6 @@
 package elements;
 
+import dataStructure.Robot;
 import dataStructure.edge_data;
 import dataStructure.node_data;
 import utils.Point3D;
@@ -18,6 +19,7 @@ public class nodeData implements node_data, Serializable {
     private String info;
     private int tag;
     private HashMap<Integer, edge_data> neighbors;
+    private boolean robot;
 
     /**
      * Constructor getting location with x and y axis and creates node with new unique id as key
@@ -36,6 +38,7 @@ public class nodeData implements node_data, Serializable {
         this.weight = Integer.MAX_VALUE;
         this.tag = -1;
         this.neighbors = new HashMap<>();
+        this.robot = false;
     }
 
     /**
@@ -135,6 +138,13 @@ public class nodeData implements node_data, Serializable {
      */
     public HashMap<Integer, edge_data> getNeighbors() {
         return neighbors;
+    }
+
+    public boolean getRobot(){
+        return this.robot;
+    }
+    public void setRobot(boolean ans){
+        this.robot = ans;
     }
 
 }

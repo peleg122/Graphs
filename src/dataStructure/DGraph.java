@@ -39,6 +39,41 @@ public class DGraph implements graph, Serializable {
         this.edgeSize = 0;
         this.mc = 0;
     }
+    public DGraph(String file_name) {
+        this._allNodeFast = new ArrayList<>();
+        this._allNodes = new HashMap<>();
+        this._allEdges = new HashMap<>();
+        this.edgeSize = 0;
+        this.mc = 0;
+        try {
+            JSONObject graph = new JSONObject(file_name);
+            JSONArray nodes = graph.getJSONArray("Nodes");
+            JSONArray edges = graph.getJSONArray("Edges");
+            double x;
+            double y;
+            int i;
+            int s;
+            for(i = 0; i < nodes.length(); ++i) {
+                String pos = nodes.getJSONObject(i).getString("pos");
+                String[] positions = pos.split(",");
+                x = Double.parseDouble(positions[0]);
+                y = Double.parseDouble(positions[1]);
+                Point3D p = new Point3D(x,y);
+                nodeData n = new nodeData(p);
+                this.addNode(n);
+            }
+
+            for(i = 0; i < edges.length(); ++i) {
+                s = edges.getJSONObject(i).getInt("src");
+                int d = edges.getJSONObject(i).getInt("dest");
+                double w = edges.getJSONObject(i).getDouble("w");
+                this.connect(s, d, w);
+            }
+        } catch (Exception var12) {
+            var12.printStackTrace();
+        }
+
+    }
 
     /**
      * getting node_data via node key (id)
@@ -84,7 +119,7 @@ public class DGraph implements graph, Serializable {
     @Override
     public void addNode(node_data n) {
         nodeData _temp = (nodeData) n;
-        _allNodes.put(_temp.getKey(), _temp);
+        _allNodes.put(_temp.getKey(), n);
         _allEdges.put(_temp.getKey(), _temp.getNeighbors());
         _allNodeFast.add(_temp);
         mc++;
@@ -213,40 +248,6 @@ public class DGraph implements graph, Serializable {
     @Override
     public int getMC() {
         return this.mc;
-    }
-
-    public DGraph(String file_name) {
-        try {
-            this._allNodeFast = new ArrayList<>();
-            this._allNodes = new HashMap<>();
-            this._allEdges = new HashMap<>();
-            this.edgeSize = 0;
-            this.mc = 0;
-            Scanner scanner = new Scanner(new File(file_name));
-            String jsonString = scanner.useDelimiter("\\A").next();
-            scanner.close();
-            JSONObject graph = new JSONObject(jsonString);
-            JSONArray nodes = graph.getJSONArray("Nodes");
-            JSONArray edges = graph.getJSONArray("Edges");
-
-            int i;
-            int s;
-            for(i = 0; i < nodes.length(); ++i) {
-                String pos = nodes.getJSONObject(i).getString("pos");
-                Point3D p = new Point3D(pos);
-                this.addNode(new nodeData(p));
-            }
-
-            for(i = 0; i < edges.length(); ++i) {
-                s = edges.getJSONObject(i).getInt("src");
-                int d = edges.getJSONObject(i).getInt("dest");
-                double w = edges.getJSONObject(i).getDouble("w");
-                this.connect(s, d, w);
-            }
-        } catch (Exception var12) {
-            var12.printStackTrace();
-        }
-
     }
 
 }
