@@ -1,13 +1,14 @@
 package gameClient;
 
 
+import dataStructure.node_data;
 import org.json.JSONObject;
 
 import dataStructure.DGraph;
 import utils.Point3D;
 
 public class Robot {
-
+    node_data node;
     private DGraph g;
     private double value;
     private int id;
@@ -116,5 +117,16 @@ public class Robot {
      */
     public void setDest(int dest) {
         this.dest = dest;
+    }
+
+    public node_data getNode() {
+        return node;
+    }
+    public int getNodeKey() {
+        return node.getKey();
+    }
+
+    public void setNode(node_data node) {
+        this.node = node;
     }
 }
