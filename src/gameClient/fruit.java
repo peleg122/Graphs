@@ -1,34 +1,92 @@
 package gameClient;
 
+
+
+
 import dataStructure.DGraph;
 import dataStructure.edge_data;
 import dataStructure.node_data;
 import elements.nodeData;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import utils.Point3D;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.Iterator;
 
-/**
- * This class represents Fruit- target on space every fruit have id, point3D,weight
- * /////////Attention!!: should be time, time(the time that he were eaten in).
- *
- * @author Amir Hoshen
- * @author Peleg Zoborovsky
- */
-
 public class fruit {
+    private static int _ID;
+    private DGraph g;
+    private edge_data edge;
+    private double value;
+    private int type;
+    private Point3D location;
+    int dest;
+    int src;
+    private String info;
+    private String pic;
 
-    private static int _ID = 0;
-    private Point3D _pos;
-    private double _type;
-    private double _value;
-    private boolean _occupied = false;
-    private edge_data _edge;
-    private ImageIcon _fruitimage;
+    /**
+     * Default constructor.
+     */
+
+    public fruit(){
+        this.value = 0;
+        this.type = 0;
+        this.edge = null;
+        this.location = null;
+        this.pic = "";
+        this.info = "";
+        this.dest = 0;
+        this.src = 0;
+    }
+
+    public fruit(DGraph g) {
+        this.g = g;
+    }
+
+    public fruit(int key, int type, Point3D location, int dest, int src, DGraph g, edge_data edge, String info, String pic) {
+
+        this.g = g;
+        this.value = key;
+        this.type = type;
+        this.location = location;
+        this.dest = dest;
+        this.src = src;
+        this.info = info;
+        this.pic = pic;
+        this.edge = edge;
+    }
+
+    public fruit(int key) {
+        this.value = key;
+        this.location = null;
+        this.info = "";
+        this.pic = "";
+        this.src = 0;
+        this.dest = 0;
+        this.edge = null;
+        this.type = 0;
+    }
+
+    public fruit(String jsonSTR)    {
+        if(!jsonSTR.isEmpty()) {
+            try {
+                JSONObject fruit = new JSONObject(jsonSTR);
+                fruit=fruit.getJSONObject("Fruit");
+                double val = fruit.getDouble("value");
+                this.value =val;
+                String pos=fruit.getString("pos");
+                this.location = new Point3D(pos);
+                int t=fruit.getInt("type");
+                this.type=t;
+            }
+            catch (Exception e)
+            {
+
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * Regular constractor.
@@ -40,9 +98,8 @@ public class fruit {
      */
     public fruit(double x, double y, double z, double value) {
         _ID++;
-        set_pos(new Point3D(x, y, z));
-        set_value(value);
-        set_fruitimage(new ImageIcon(String.valueOf(get_fruitimage())));
+        setLocation(new Point3D(x, y, z));
+        setValue(value);
     }
 
     /**
@@ -54,12 +111,11 @@ public class fruit {
      * @param value this fruit value
      * @param type  (apple(-1) || banana(1))
      */
-    public fruit(double x, double y, double z, double value, double type) {
+    public fruit(double x, double y, double z, double value, int type) {
         _ID++;
-        set_pos(new Point3D(x, y, z));
-        set_value(value);
-        set_type(type);
-        set_fruitimage(new ImageIcon(String.valueOf(get_fruitimage())));
+        setLocation(new Point3D(x, y, z));
+        setValue(value);
+        setType(type);
     }
 
     /**
@@ -69,12 +125,11 @@ public class fruit {
      * @param value this fruit value.
      * @param type  this fruit type(apple(-1) || banana(1)).
      */
-    public fruit(Point3D P, double value, double type) {
+    public fruit(Point3D P, double value, int type) {
         _ID++;
-        set_pos(P);
-        set_value(value);
-        set_type(type);
-        set_fruitimage(new ImageIcon(String.valueOf(get_fruitimage())));
+        setLocation(P);
+        setValue(value);
+        setType(type);
     }
 
     /**
@@ -85,136 +140,74 @@ public class fruit {
     public fruit(fruit ot) {
         if (ot == null) throw new IllegalArgumentException("fruit cant be null");
         _ID++;
-        set_pos(new Point3D(ot.get_pos()));
-        set_value(ot.get_value());
-        set_type(ot.get_type());
-        set_fruitimage(ot.get_fruitimage());
+        setLocation(new Point3D(ot.getLocation()));
+        setValue(ot.getValue());
+        setType(ot.getType());
     }
 
-    public ImageIcon get_fruitimage() {//getters and setters
-        return _fruitimage;
+    public double getValue() {
+        return this.value;
     }
 
-    /**
-     * setting the fruit image
-     * if this fruit type is 1 image icon will be banana
-     * if this fruit type is -1 image icon will be apple.
-     *
-     * @param fruitimage the fruit choice by criterion(1 ||-1)
-     */
-    public void set_fruitimage(ImageIcon fruitimage) {
-        if (this._type == 1) {
-            this._fruitimage = new ImageIcon("utils/banana.png");//banana
-        } else if (this._type == -1) {
-            this._fruitimage = new ImageIcon("utils/apple.png");//apple
-        } else {
-            throw new IllegalArgumentException("fruit type can be only 1 || -1");
-        }
+
+    public void setValue(double value) {
+        this.value = value;
     }
 
-    /**
-     * this fruit ID
-     *
-     * @return ID
-     */
-    public int getID() {
-        return _ID;
+    public Point3D getLocation() {
+        return this.location;
     }
 
-    /**
-     * this fruit position
-     *
-     * @return Point3D _pos (position of the fruit)
-     */
-    public Point3D get_pos() {
-        return _pos;
+    public void setLocation(Point3D location) {
+        this.location = location;
     }
 
-    /**
-     * setting the fruit position (Point3D)
-     *
-     * @param position
-     */
-    public void set_pos(Point3D position) {
-        _pos = position;
+    public int getType() {
+        return this.type;
     }
 
-    /**
-     * the fruit type represented by two options
-     * -1 is an apple
-     * 1 is banana
-     *
-     * @return the fruit type(int== -1||1)
-     */
-    public double get_type() {
-        return _type;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    /**
-     * setting this fruit type
-     * 1 or -1, otherwise exceptions will thrown
-     *
-     * @param type (should be 1 || -1).
-     */
-    public void set_type(double type) {
-        if (type == 1 || type == -1) this._type = type;
-        else
-            throw new IllegalArgumentException("the fruit type can be only 1 || -1");
+    public String getInfo() {
+        return this.info;
     }
 
-    /**
-     * each fruit can have a different value
-     * when the robot collect the fruits the robot criteria money(value) will be added.
-     *
-     * @param _value this fruit value.
-     */
-    public void set_value(double _value) {
-        this._value = _value;
+    public void setInfo(String info) {
+        this.info = info;
     }
 
-    /**
-     * getting this fruit value
-     *
-     * @return this value.
-     */
-    public double get_value() {
-        return _value;
+    public int getDest() {
+        return dest;
     }
 
-    /**
-     * this method will be used in MyGameGUI..
-     * if a robot from the list is allready heading towards this fruit
-     * we will say that this fruit is occupied such that other robots wont waste
-     * any time heading towards targeted fruits.
-     *
-     * @param occupied - true- robot is on his way towards the fruit
-     *                 -false- this fruit is a target.
-     */
-    public void set_occupied(boolean occupied) {
-        this._occupied = occupied;
+    public void setDest(int dest) {
+        this.dest = dest;
     }
 
-    /**
-     * @return true if a robot is on his way towards this fruit
-     * false otherwise.
-     */
-    public boolean get_Occupied() {
-        return _occupied;
+    public int getSrc() {
+        return src;
     }
 
-    /**
-     * write the Fruit as string.
-     *
-     * @return string of the Fruit.
-     */
-    public String toString() {
-        return _pos.toString() + "," + _value + " ," + _type;
+    public void setSrc(int src) {
+        this.src = src;
+    }
+    public edge_data getEdge()
+    {
+        return this.edge;
     }
 
-    public edge_data get_edge() {
-        return _edge;
+    public String getPic() {
+        return this.pic;
+    }
+    public void setPic(String file_name) {
+        this.pic = file_name;
     }
 
+    public void setEdge(edge_data edge) {
+        this.edge = edge;
+    }
     public edge_data edgdeLocator(DGraph graph) {
         double distanceAtoB;
         double distanceAtoF;
@@ -232,8 +225,8 @@ public class fruit {
                 distanceAtoB = graph.getNode(edgeData.getSrc()).getLocation()
                         .distance2D(graph.getNode(edgeData.getDest()).getLocation());
                 distanceAtoF = graph.getNode(edgeData.getSrc()).getLocation()
-                        .distance2D(this._pos);
-                distanceFtoB = this._pos.distance2D(graph.getNode(edgeData.getDest()).getLocation());
+                        .distance2D(this.location);
+                distanceFtoB = this.location.distance2D(graph.getNode(edgeData.getDest()).getLocation());
                 minDistanceChecking = Math.abs(distanceAtoB - (distanceAtoF + distanceFtoB));
                 if (minDistanceChecking <= minDistance) {
                     minDistance = minDistanceChecking;
@@ -241,12 +234,11 @@ public class fruit {
                 }
             }
         }
-        if (_type == 1 && temp.getDest() - temp.getSrc() == -1 ||
-                _type == -1 && temp.getDest() - temp.getSrc() == 1) {
+        if (type == 1 && temp.getDest() - temp.getSrc() == -1 ||
+                type == -1 && temp.getDest() - temp.getSrc() == 1) {
             temp = graph.getEdge(temp.getDest(), temp.getSrc());
         }
-        this._edge = temp;
+        this.edge = temp;
         return temp;
     }
-
 }
