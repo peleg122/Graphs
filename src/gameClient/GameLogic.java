@@ -22,13 +22,13 @@ public class GameLogic {
     private game_service game;
     private DGraph g;
     private Graph_Algo ga;
-    private HashMap<Point3D, Fruit> fruits;
+    private HashMap<Point3D, Fruits> fruits;
     private HashMap<Integer, Robot> robots;
     private int destNode=-1;
     private int destByMouse;
     private Robot move;
 
-    public GameLogic(Game_Server game_server, HashMap<Point3D, Fruit> allFruits, HashMap<Integer, Robot> allRobots) {
+    public GameLogic(Game_Server game_server, HashMap<Point3D, Fruits> allFruits, HashMap<Integer, Robot> allRobots) {
         this.game = game_server;
         fruits=allFruits;
         robots=allRobots;
@@ -37,7 +37,7 @@ public class GameLogic {
         ga.init(g);
     }
 
-    public void update(Game_Server game_server, HashMap<Point3D, Fruit> allFruits, HashMap<Integer, Robot> allRobots) {
+    public void update(Game_Server game_server, HashMap<Point3D, Fruits> allFruits, HashMap<Integer, Robot> allRobots) {
         this.game=game_server;
         fruits=allFruits;
         robots=allRobots;
@@ -138,13 +138,13 @@ public class GameLogic {
         private game_service game;
         private DGraph g;
         private Graph_Algo ga;
-        private List<Fruit> fruits;
+        private List<Fruits> fruits;
         private List<Robot> robots;
         private int destNode=-1;
         private int destByMouse;
         private Robot move;
 
-        public algoForGui(game_service game1, List<Fruit> f, List<Robot> p)
+        public algoForGui(game_service game1, List<Fruits> f, List<Robot> p)
         {
             this.game=game1;
             fruits=f;
@@ -159,7 +159,7 @@ public class GameLogic {
          * @param f - the update list of fruits
          * @param p - the update list of Pacman
          */
-        public  void update(game_service game1, List<Fruit> f, List<Robot> p)
+        public  void update(game_service game1, List<Fruits> f, List<Robot> p)
         {
             this.game=game1;
             fruits=f;

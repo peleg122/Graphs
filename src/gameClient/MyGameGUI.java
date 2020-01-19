@@ -35,7 +35,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private  game_service game;
     private int senario;
     private Graph_Algo ga;
-    private  HashMap<Point3D, Fruit> fruits = new HashMap<>();
+    private  HashMap<Point3D, Fruits> fruits = new HashMap<>();
     private HashMap<Integer, Robot> robots = new HashMap<Integer, Robot>();
     double xMax = Double.NEGATIVE_INFINITY;
     double xMin = Double.POSITIVE_INFINITY;
@@ -73,7 +73,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             int fs=0;
             while(f_iter.hasNext()) {
                 fs++;
-                Fruit f = new Fruit(f_iter.next().toString());
+                Fruits f = new Fruits(f_iter.next().toString());
                 this.fruits.put(f.getLocation(), f);
                 f.edgdeLocator(g);
             }
@@ -185,7 +185,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         fruits.clear();
         Iterator<String> fruit = game.getFruits().iterator();
         while(fruit.hasNext()) {
-            Fruit cf = new Fruit(fruit.next());
+            Fruits cf = new Fruits(fruit.next());
             this.fruits.put(cf.getLocation(), cf);
             if(cf.getType() == 1) {
                 StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "banana.png", 0.0008, 0.0008);
