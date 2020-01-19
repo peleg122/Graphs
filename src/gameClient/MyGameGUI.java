@@ -1,7 +1,6 @@
 package gameClient;
 
 
-import dataStructure.Fruit;
 import elements.nodeData;
 import utils.Point3D;
 import utils.StdDraw;
@@ -22,7 +21,6 @@ import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import gameClient.*;
 import Server.Game_Server;
 import Server.game_service;
 import algorithms.Graph_Algo;
@@ -97,10 +95,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
         game.startGame();
         t.start();
-        porpor();
+        linearTranspos();
     }
 
-    private void porpor() {
+    private void linearTranspos() {
         for (Iterator<node_data> verIter = g.getV().iterator(); verIter.hasNext(); ) {
             int point = verIter.next().getKey();
             if (g.getNode(point).getLocation().x() > xMax)
