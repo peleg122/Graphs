@@ -19,40 +19,16 @@ public class Robot {
     private String pic;
 
     /**
-     * Default constructor.
+     * the method creates robot with all his Properties from a JSON file:
+     * value- of value is the value(money) that each robot have after he collects the fruits.
+     * src- source node the robot start from.
+     * id- this robot id.
+     * dest- destination node to the fruit.
+     * speed- this robot speed travel.
+     * pos- this robot position.
+     * @param jsonSTR
      */
-
-    public Robot(){
-        this.value = 0;
-        this.id = 0;
-        this.location = null;
-        this.info = "";
-        this.pic ="";
-        this.g = null;
-    }
-
-    public Robot(int value, int tag, int src, int dest, int speed, Point3D location, DGraph g, String info, String pic) {
-        this.g = g;
-        this.value = value;
-        this.id = tag;
-        this.src = src;
-        this.dest = dest;
-        this.speed = speed;
-        this.location = location;
-        this.info = info;
-        this.pic = pic;
-    }
-
-    public Robot(int key) {
-        this.value = 0;
-        this.id = key;
-        this.location = null;
-        this.info = "";
-        this.pic = "";
-    }
-
-    public Robot(String jsonSTR)
-    {
+    public Robot(String jsonSTR) {
         try {
             JSONObject robot = new JSONObject(jsonSTR);
             robot=robot.getJSONObject("Robot");
@@ -69,69 +45,76 @@ public class Robot {
             e.printStackTrace();
         }
     }
+
+    /**
+     * setting this robot on a graph.
+     * @param g
+     */
     public void setGraph(DGraph g) {
         this.g = g;
     }
+
+    /**
+     * get this robot graph.
+     * @return
+     */
     public DGraph getGraph() {
         return g;
     }
-    public void setLocation(Point3D location) {
-        this.location = location;
-    }
+
+    /**
+     * get this robot location
+     * @return Point3D location of the robot.
+     */
     public Point3D getLocation() {
         return location;
     }
-    public double getValue() {
-        return this.value;
-    }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
-
+    /**
+     * getting this robot id.
+     * @return his id.
+     */
     public int getId() {
         return this.id;
     }
 
+    /**
+     * setting this robot id.
+     * @param id
+     */
     public void setId(int id) {
         this.id = id;
     }
-    public String getInfo() {
-        return this.info;
-    }
 
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
+    /**
+     *this robot source node
+     * @return this source
+     */
     public int getSrc() {
         return src;
     }
 
+    /**
+     * setting this robot source.
+     * @param src
+     */
     public void setSrc(int src) {
         this.src = src;
     }
 
+    /**
+     * getting this robot destination.
+     * @returnthe robot destination.
+     */
     public int getDest() {
         return dest;
     }
 
+    /**
+     * setting this robot destination.
+     * @param dest
+     */
     public void setDest(int dest) {
         this.dest = dest;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public String getPic() {
-        return this.pic;
-    }
-    public void Robot(String file_name) {
-        this.pic = file_name;
     }
 }
