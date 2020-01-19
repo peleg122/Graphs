@@ -42,34 +42,13 @@ public class Fruits {
         this.occupied =false;
     }
 
-    public Fruits(DGraph g) {
-        this.g = g;
-    }
-
-    public Fruits(int key, int type, Point3D location, int dest, int src, DGraph g, edge_data edge, String info, String pic) {
-
-        this.g = g;
-        this.value = key;
-        this.type = type;
-        this.location = location;
-        this.dest = dest;
-        this.src = src;
-        this.info = info;
-        this.pic = pic;
-        this.edge = edge;
-    }
-
-    public Fruits(int key) {
-        this.value = key;
-        this.location = null;
-        this.info = "";
-        this.pic = "";
-        this.src = 0;
-        this.dest = 0;
-        this.edge = null;
-        this.type = 0;
-    }
-
+    /**
+     * the method creates fruit with all his Properties from a JSON file:
+     * value of fruit is the value(money) that each robot gets when collecting this fruit.
+     * type -1 is banana and 1 is an apple.
+     * position of the fruit.
+     * @param jsonSTR
+     */
     public Fruits(String jsonSTR)    {
         if(!jsonSTR.isEmpty()) {
             try {
@@ -147,70 +126,103 @@ public class Fruits {
         setType(ot.getType());
     }
 
+    /**
+     * get this fruit value.
+     * @return value as type double.
+     */
     public double getValue() {
         return this.value;
     }
 
-
+    /**
+     * setting this fruit value.
+     * @param value
+     */
     public void setValue(double value) {
         this.value = value;
     }
 
+    /**
+     * method gets this fruit location.
+     * @return this fruit location.
+     */
     public Point3D getLocation() {
         return this.location;
     }
 
+    /**
+     * method will set this fruit location.
+     * @param location
+     */
     public void setLocation(Point3D location) {
         this.location = location;
     }
 
+    /**
+     * method will get this fruit location.
+     * @return this fruit location.
+     */
     public int getType() {
         return this.type;
     }
 
+    /**
+     * setting this fruit type.
+     * @param type
+     */
     public void setType(int type) {
         this.type = type;
     }
 
-    public String getInfo() {
-        return this.info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
+    /**
+     * method return the destination node the robot need to reach in order to
+     * properly eat the fruit by definition fruit can only be eaten if the
+     * robot will get to the edge in the path from lowest node number to a higher node number.
+     * @return the fruit destination.
+     */
     public int getDest() {
         return dest;
     }
 
+    /**
+     * setting this fruit destination.
+     * @param dest
+     */
     public void setDest(int dest) {
         this.dest = dest;
     }
 
+    /**
+     * gets this fruit source node number to reach in order to eat
+     * this fruit
+     * @return the source node
+     */
     public int getSrc() {
         return src;
     }
 
+    /**
+     * setting this fruit source node number.
+     * @param src
+     */
     public void setSrc(int src) {
         this.src = src;
     }
-    public edge_data getEdge()
-    {
+
+    /**
+     * gets the edge this fruit is sitting on.
+     * @return graph edge type this fruit is on.
+     */
+    public edge_data getEdge() {
         return this.edge;
     }
 
-    public String getPic() {
-        return this.pic;
-    }
-    public void setPic(String file_name) {
-        this.pic = file_name;
-    }
-
-    public void setEdge(edge_data edge) {
-        this.edge = edge;
-    }
-    public edge_data edgdeLocator(DGraph graph) {
+    /**
+     * gets the closest edge a fruit is on from the current robot.
+     * @param graph
+     * @return the closest fruit edge.
+     */
+    public edge_data edgeLocator(DGraph graph) {
         double distanceAtoB;
         double distanceAtoF;
         double distanceFtoB;
@@ -244,9 +256,20 @@ public class Fruits {
         return temp;
     }
 
+    /**
+     * let us know if this fruit is waiting for a robot.
+     * @return true if a robot is on his way
+     * false otherwise.
+     */
     public boolean getOccupied() {
         return this.occupied;
     }
+
+    /**
+     * if any robot is going towards this fruit, we return a mark that this fruit is occupied.
+     * @return true if a robot is on his way
+     * otherwise false.
+     */
     public void setOccupied(boolean set){
         this.occupied = set;
     }
