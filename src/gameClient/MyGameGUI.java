@@ -1,6 +1,7 @@
 package gameClient;
 
 
+import dataStructure.Fruit;
 import elements.nodeData;
 import utils.Point3D;
 import utils.StdDraw;
@@ -10,10 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -21,6 +19,7 @@ import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import gameClient.*;
 import Server.Game_Server;
 import Server.game_service;
 import algorithms.Graph_Algo;
@@ -40,6 +39,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     double xMin = Double.POSITIVE_INFINITY;
     double yMax = Double.NEGATIVE_INFINITY;
     double yMin = Double.POSITIVE_INFINITY;
+    Thread t = new Thread(this);
+    private HashMap<Integer, List<node_data>> routes;
 
     public MyGameGUI() {
         Object[] levels = {"0", "1", "2", "3", "4", "5", "6",
@@ -56,7 +57,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     }
 
     private void initGame(int gameNumber) {
-        Thread t = new Thread(this);
         this.game = Game_Server.getServer(gameNumber); // you have [0,23] games
         String sg = game.getGraph();
         this.g = new DGraph(sg);
@@ -67,6 +67,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             line = new JSONObject(info);
             JSONObject ttt = line.getJSONObject("GameServer");
             int rs = ttt.getInt("robots");
+            routes = new HashMap<>();
             System.out.println(info);
             // the list of fruits should be considered in your solution
             Iterator<String> f_iter = game.getFruits().iterator();
@@ -95,10 +96,25 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
         game.startGame();
         t.start();
-        linearTranspos();
+        porpor();
     }
 
-    private void linearTranspos() {
+//    private void play() {
+//        while (game.isRunning()) {
+//            StdDraw.enableDoubleBuffering();
+//            refreshDraw();
+//            drawGraph();
+//            drawFruit();
+//            drawRobot();
+//            drawScore();
+//            moveRobots(this.game, this.g);
+//            StdDraw.show();
+//        }
+//        String results = game.toString();
+//        System.out.println("Game Over: " + results);
+//    }
+
+    private void porpor() {
         for (Iterator<node_data> verIter = g.getV().iterator(); verIter.hasNext(); ) {
             int point = verIter.next().getKey();
             if (g.getNode(point).getLocation().x() > xMax)
@@ -232,7 +248,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     int dest = ttt.getInt("dest");
 
                     if (dest == -1) {
-                        dest = src + 1 % g.nodeSize();//nextNode(gg, src);
+                        dest = nextNodeRoute(rid, src, ga);//nextNode(gg, src);
                         game.chooseNextEdge(rid, dest);
                         System.out.println("Turn to node: " + dest + "  time to end:" + (t / 1000));
                         System.out.println(ttt);
@@ -242,6 +258,33 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 }
             }
         }
+    }
+
+    private int nextNodeRoute(int rid, int src, Graph_Algo g) {
+        int ans = -1;
+        if (routes.get(rid) == null || routes.get(rid).isEmpty()) {
+            int fs = fruits.size();
+            Iterator<Fruits> fi = fruits.values().iterator();
+            for (int i = 0; i < fs; i++) {
+                Fruits f = fi.next();
+                if (!f.getOccupied()) {
+                    f.setOccupied(true);
+                    f.edgdeLocator((DGraph) g._graph);
+                    g.shortestPath(src, f.getEdge().getDest());
+                    routes.put(rid, g.shortestPath(src, f.getEdge().getDest()));
+                    if (routes.get(rid).size() > 1 && routes.get(rid).get(0).getKey() == src) {
+                        routes.get(rid).remove(0);
+                        return routes.get(rid).remove(0).getKey();
+                    } else if (routes.get(rid).size() == 1) {
+                        return routes.get(rid).remove(0).getKey();
+                    }
+                }
+            }
+        } else {
+            if (routes.get(rid).get(0).getKey() == src) routes.get(rid).remove(0);
+            return routes.get(rid).remove(0).getKey();
+        }
+        return ans;
     }
 
     public void drawScore() {
@@ -312,6 +355,12 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 drawScore();
                 moveRobots(this.game, this.g);
                 StdDraw.show();
+                try {
+                    t.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             }
         }
         String results = game.toString();
