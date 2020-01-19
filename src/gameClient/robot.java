@@ -1,108 +1,137 @@
 package gameClient;
 
+
+import org.json.JSONObject;
+
 import dataStructure.DGraph;
-import dataStructure.Robot;
 import utils.Point3D;
-import utils.StdDraw;
 
-import javax.swing.*;
+public class robot {
 
-public class robot extends JFrame implements Robot {
+    private DGraph g;
+    private double value;
+    private int id;
+    private int src;
+    private int dest;
+    private double speed;
+    private Point3D location;
+    private String info;
+    private String pic;
 
-    private static int _id = 0;
-    private int _src;
-    private int _dest;
-    private boolean _occupied = false;
-    private double _money = 0;
-    private Point3D _location;
-    //public final ImageIcon _robocop = new ImageIcon("utils/robot.png");
+    /**
+     * Default constructor.
+     */
 
-
-    public robot(int key){
-        _id++;
-        this._src = key;
-        this._dest = -1;
-    }
-    @Override
-    public void init() {
-
-    }
-    public void location(DGraph graph){
-        this._location = graph.getNode(this._src).getLocation();
-    }
-    @Override
-    public String toJSON() {
-        return null;
+    public robot(){
+        this.value = 0;
+        this.id = 0;
+        this.location = null;
+        this.info = "";
+        this.pic ="";
+        this.g = null;
     }
 
-    @Override
-    public void fromJSON(String JSON) {
-
+    public robot(int value, int tag, int src, int dest, int speed, Point3D location, DGraph g, String info, String pic) {
+        this.g = g;
+        this.value = value;
+        this.id = tag;
+        this.src = src;
+        this.dest = dest;
+        this.speed = speed;
+        this.location = location;
+        this.info = info;
+        this.pic = pic;
     }
 
-    @Override
-    public void setMoney(double value) {
-
+    public robot(int key) {
+        this.value = 0;
+        this.id = key;
+        this.location = null;
+        this.info = "";
+        this.pic = "";
     }
 
-    @Override
+    public robot(String jsonSTR)
+    {
+        try {
+            JSONObject robot = new JSONObject(jsonSTR);
+            robot=robot.getJSONObject("Robot");
+            value = robot.getDouble("value");
+            this.src=robot.getInt("src");
+            this.id=robot.getInt("id");
+            this.dest=robot.getInt("dest");
+            this.speed=robot.getDouble("speed");
+            String pos=robot.getString("pos");
+            this.location=new Point3D(pos);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public void setGraph(DGraph g) {
+        this.g = g;
+    }
+    public DGraph getGraph() {
+        return g;
+    }
     public void setLocation(Point3D location) {
-
+        this.location = location;
+    }
+    public Point3D getLocation() {
+        return location;
+    }
+    public double getValue() {
+        return this.value;
     }
 
-    @Override
-    public void setSpeed(long speed) {
-
+    public void setValue(int value) {
+        this.value = value;
     }
 
-    @Override
-    public void setOccupied(boolean bool) {
-
+    public int getId() {
+        return this.id;
     }
 
-    @Override
-    public void setIMG(ImageIcon img) {
-
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getInfo() {
+        return this.info;
     }
 
-    @Override
-    public double getMoney() {
-        return 0;
+    public void setInfo(String info) {
+        this.info = info;
     }
 
-    @Override
-    public Point3D getPointLocation() {
-        return _location;
+    public int getSrc() {
+        return src;
     }
 
-
-    @Override
-    public long getSpeed() {
-        return 0;
+    public void setSrc(int src) {
+        this.src = src;
     }
 
-    @Override
-    public boolean getOccupied() {
-        return false;
+    public int getDest() {
+        return dest;
     }
 
-    @Override
-    public ImageIcon getIMG() {
-        return null;
+    public void setDest(int dest) {
+        this.dest = dest;
     }
 
-    public static void main(String [] args){
-
-        StdDraw.setCanvasSize(800, 800);
-        StdDraw.setXscale(-100, 100);
-        StdDraw.setYscale(-100, 100);
-        StdDraw.clear();
-        robot r = new robot(1);
-        StdDraw.frame.setIconImage(r.getIconImage());
-        StdDraw.picture(10,10,"robot.png");
-        StdDraw.picture(20,20,"banana.png");
-        StdDraw.picture(30,30,"apple.png");
-
+    public double getSpeed() {
+        return speed;
     }
 
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public String getPic() {
+        return this.pic;
+    }
+    public void Robot(String file_name) {
+        this.pic = file_name;
+    }
 }
