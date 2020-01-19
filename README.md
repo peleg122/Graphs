@@ -1,4 +1,4 @@
-# Welcome to Graph project!
+# Welcome to MyGame project!
 
 # Authors
 Amir Hoshen,
