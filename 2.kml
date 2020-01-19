@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+  <Document>
+    <name>Game stage :2</name>
+ <Style id="node">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal3/icon35.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style> <Style id="fruit-banana">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal5/icon49.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style> <Style id="fruit-apple">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal5/icon56.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style> <Style id="robot">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal4/icon26.png></href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:53:36.008731600</when>
+      </TimeStamp>
+      <styleUrl>#banana</styleUrl>
+      <Point>
+         <coordinates>35.197656770719604,32.10191878639921</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:53:36.016711500</when>
+      </TimeStamp>
+      <styleUrl>#banana</styleUrl>
+      <Point>
+         <coordinates>35.199963710098416,32.105723673136964</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:53:36.017709</when>
+      </TimeStamp>
+      <styleUrl>#banana</styleUrl>
+      <Point>
+         <coordinates>35.195224052340706,32.10575624080796</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:53:36.018707200</when>
+      </TimeStamp>
+      <styleUrl>#robot</styleUrl>
+      <Point>
+         <coordinates>35.197528356739305,32.1053088</coordinates>
+      </Point>
+    </Placemark>
+  
+</Document>
+</kml>

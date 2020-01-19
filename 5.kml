@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+  <Document>
+    <name>Game stage :5</name>
+ <Style id="node">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal3/icon35.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style> <Style id="fruit-banana">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal5/icon49.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style> <Style id="fruit-apple">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal5/icon56.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style> <Style id="robot">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal4/icon26.png></href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:54:59.945334400</when>
+      </TimeStamp>
+      <styleUrl>#banana</styleUrl>
+      <Point>
+         <coordinates>35.188900353135324,32.105320110855615</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:54:59.954309500</when>
+      </TimeStamp>
+      <styleUrl>#banana</styleUrl>
+      <Point>
+         <coordinates>35.206679711961414,32.10571613186106</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:54:59.954309500</when>
+      </TimeStamp>
+      <styleUrl>#banana</styleUrl>
+      <Point>
+         <coordinates>35.212669424769075,32.105340746955505</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:54:59.954309500</when>
+      </TimeStamp>
+      <styleUrl>#banana</styleUrl>
+      <Point>
+         <coordinates>35.21120742821597,32.10240519983585</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:54:59.955306700</when>
+      </TimeStamp>
+      <styleUrl>#banana</styleUrl>
+      <Point>
+         <coordinates>35.2107064115802,32.10181728154006</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:54:59.955306700</when>
+      </TimeStamp>
+      <styleUrl>#banana</styleUrl>
+      <Point>
+         <coordinates>35.20704629752213,32.105471692111855</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <TimeStamp>
+        <when>2020-01-19T22:54:59.956304</when>
+      </TimeStamp>
+      <styleUrl>#robot</styleUrl>
+      <Point>
+         <coordinates>35.212111165456015,32.106235628571426</coordinates>
+      </Point>
+    </Placemark>
+  
+</Document>
+</kml>
