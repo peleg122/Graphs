@@ -28,6 +28,12 @@ public class GameLogic {
     private int destByMouse;
     private Robot move;
 
+    /**
+     * Constructor that recieves the game server, the fruits and robots.
+     * @param game_server - game server of this game
+     * @param allFruits - all the fruits
+     * @param allRobots - all the robots
+     */
     public GameLogic(Game_Server game_server, HashMap<Point3D, Fruits> allFruits, HashMap<Integer, Robot> allRobots) {
         this.game = game_server;
         fruits=allFruits;
@@ -37,12 +43,21 @@ public class GameLogic {
         ga.init(g);
     }
 
+    /**
+     * updates the whole game.
+     * @param game_server - updated game server
+     * @param allFruits - updated fruits
+     * @param allRobots - updated robots
+     */
     public void update(Game_Server game_server, HashMap<Point3D, Fruits> allFruits, HashMap<Integer, Robot> allRobots) {
         this.game=game_server;
         fruits=allFruits;
         robots=allRobots;
     }
 
+    /**
+     * moves the robots in the game.
+     */
     public void moveRobots() {
         List<Integer> destList = new ArrayList<Integer>();
         List<String> log = game.move();
@@ -71,6 +86,13 @@ public class GameLogic {
             }
         }
     }
+
+    /**
+     * Finds the fruit on the closes edge to the robot.
+     * @param src - where the robot is currently
+     * @param destList - the path that the robot needs to go through to get to the fruit
+     * @return
+     */
     private  int bestNode(int src,List<Integer>destList)
     {
         double minpath=Double.POSITIVE_INFINITY;

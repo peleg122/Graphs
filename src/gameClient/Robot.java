@@ -27,7 +27,7 @@ public class Robot {
      * dest- destination node to the fruit.
      * speed- this robot speed travel.
      * pos- this robot position.
-     * @param jsonSTR
+     * @param jsonSTR - a string that represents the robot
      */
     public Robot(String jsonSTR) {
         try {
