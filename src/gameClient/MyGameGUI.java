@@ -140,7 +140,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 double x = n.getLocation().x();
                 double y = n.getLocation().y();
                 StdDraw.setPenRadius(0.05);
-                StdDraw.setPenColor(StdDraw.RED);
+                StdDraw.setPenColor(StdDraw.GREEN);
                 StdDraw.point(x, y);
                 StdDraw.setPenColor(StdDraw.BLACK);
                 String str = n.getKey() + "";
@@ -159,7 +159,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     double dy = g.getNode(edges.getDest()).getLocation().y();
 
                     StdDraw.setPenRadius(0.005);
-                    StdDraw.setPenColor(StdDraw.MAGENTA);
+                    StdDraw.setPenColor(StdDraw.BLUE);
 
                     StdDraw.line(sx, sy, dx, dy);
 
