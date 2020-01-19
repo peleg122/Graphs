@@ -24,22 +24,6 @@ public class Fruits {
     private boolean occupied;
 
     /**
-     * Default constructor.
-     */
-
-    public Fruits(){
-        this.value = 0;
-        this.type = 0;
-        this.edge = null;
-        this.location = null;
-        this.pic = "";
-        this.info = "";
-        this.dest = 0;
-        this.src = 0;
-        this.occupied =false;
-    }
-
-    /**
      * the method creates fruit with all his Properties from a JSON file:
      * value of fruit is the value(money) that each robot gets when collecting this fruit.
      * type -1 is banana and 1 is an apple.
