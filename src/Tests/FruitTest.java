@@ -1,6 +1,6 @@
 package Tests;
 
-import gameClient.Fruit;
+import gameClient.Fruits;
 import org.junit.jupiter.api.Test;
 import utils.Point3D;
 
@@ -17,8 +17,8 @@ class fruitTest {
      */
     @Test
     void NewFruit_and_to_stirngtest() {
-        Fruit f = new Fruit(new Point3D(4, 2, 0), 5,1);
-        Fruit f2 = new Fruit( 4, 2, 0, 4,1);
+        Fruits f = new Fruits(new Point3D(4, 2, 0), 5,1);
+        Fruits f2 = new Fruits( 4, 2, 0, 4,1);
         if (f.toString().equals(f2.toString())) {
             fail("Constractor problem");
         }
