@@ -256,7 +256,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      * @param rid this robot id.
      * @param src this robot source node.
      * @param g the graph
-     * @return
+     * @return return the id of the closes node.
      */
     private int nextNodeRoute(int rid, int src, Graph_Algo g) {
         int ans = -1;
