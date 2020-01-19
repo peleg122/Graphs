@@ -24,6 +24,7 @@ public class Fruits {
     int src;
     private String info;
     private String pic;
+    private boolean occupied;
 
     /**
      * Default constructor.
@@ -38,6 +39,7 @@ public class Fruits {
         this.info = "";
         this.dest = 0;
         this.src = 0;
+        this.occupied =false;
     }
 
     public Fruits(DGraph g) {
@@ -240,5 +242,12 @@ public class Fruits {
         }
         this.edge = temp;
         return temp;
+    }
+
+    public boolean getOccupied() {
+        return this.occupied;
+    }
+    public void setOccupied(boolean set){
+        this.occupied = set;
     }
 }
