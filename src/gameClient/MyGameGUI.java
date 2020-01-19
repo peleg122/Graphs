@@ -1,7 +1,6 @@
 package gameClient;
 
 
-import dataStructure.Fruit;
 import elements.nodeData;
 import utils.Point3D;
 import utils.StdDraw;
@@ -19,7 +18,6 @@ import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import gameClient.*;
 import Server.Game_Server;
 import Server.game_service;
 import algorithms.Graph_Algo;
@@ -42,6 +40,9 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     Thread t = new Thread(this);
     private HashMap<Integer, List<node_data>> routes;
 
+    /**
+     * creating the first view of client graphic user interface.
+     */
     public MyGameGUI() {
         Object[] levels = {"0", "1", "2", "3", "4", "5", "6",
                 "7", "8", "9", "10", "11", "12",
@@ -56,6 +57,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     }
 
+    /**
+     * initializing this game by a client choice scenario
+     * @param gameNumber is the scenario.
+     */
     private void initGame(int gameNumber) {
         this.game = Game_Server.getServer(gameNumber); // you have [0,23] games
         String sg = game.getGraph();
@@ -74,9 +79,9 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             int fs = 0;
             while (f_iter.hasNext()) {
                 fs++;
-                Fruits f = new Fruits(f_iter.next().toString());
+                Fruits f = new Fruits(f_iter.next());
                 this.fruits.put(f.getLocation(), f);
-                f.edgdeLocator(g);
+                f.edgeLocator(g);
             }
             Iterator<Fruits> f = fruits.values().iterator();
             for (int a = 0; a < rs; a++) {
@@ -96,25 +101,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
         game.startGame();
         t.start();
-        porpor();
+        linearTranspose();
     }
 
-//    private void play() {
-//        while (game.isRunning()) {
-//            StdDraw.enableDoubleBuffering();
-//            refreshDraw();
-//            drawGraph();
-//            drawFruit();
-//            drawRobot();
-//            drawScore();
-//            moveRobots(this.game, this.g);
-//            StdDraw.show();
-//        }
-//        String results = game.toString();
-//        System.out.println("Game Over: " + results);
-//    }
-
-    private void porpor() {
+    /**
+     * transposing x and y scale for the gui from the graph world.
+     */
+    private void linearTranspose() {
         for (Iterator<node_data> verIter = g.getV().iterator(); verIter.hasNext(); ) {
             int point = verIter.next().getKey();
             if (g.getNode(point).getLocation().x() > xMax)
@@ -136,8 +129,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         StdDraw.setYscale(yMin, yMax);
     }
 
-    /*
-     * Function that draws the node.
+    /**
+     * drawing this graph nodes.
      */
     public void drawGraph() {
         if (!g.getV().isEmpty()) {
@@ -192,6 +185,9 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
+    /**
+     * drawing robots on the graph.
+     */
     public void drawRobot() {
         List<String> log = game.getRobots();
         Iterator<String> rob = log.iterator();
@@ -203,6 +199,9 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
+    /**
+     * drawing fruits on the graph.
+     */
     public void drawFruit() {
         fruits.clear();
         Iterator<String> fruit = game.getFruits().iterator();
@@ -217,23 +216,11 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
-    private int nextNode(DGraph g, int src) {
-        int ans = -1;
-
-        Collection<edge_data> ee = g.getE(src);
-        Iterator<edge_data> itr = ee.iterator();
-        int s = ee.size();
-        int r = (int) (Math.random() * s);
-        int i = 0;
-        while (i < r) {
-            itr.next();
-            i++;
-        }
-        ans = itr.next().getDest();
-        return ans;
-
-    }
-
+    /**
+     * moving the robots on the gui, printing the scenario log.
+     * @param game2
+     * @param gg is a directed graph.
+     */
     private void moveRobots(game_service game2, DGraph gg) {
         List<String> log = game.move();
         if (log != null) {
@@ -260,6 +247,17 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
+    /**
+     * this method is the algorithm of the movement of each robot on the graph.
+     * using a graph algorithm class to find the shortest path for the robot to move
+     * the shortest path algorithm is dijkstra,
+     * hebrew explanation(https://he.wikipedia.org/wiki/%D7%90%D7%9C%D7%92%D7%95%D7%A8%D7%99%D7%AA%D7%9D_%D7%93%D7%99%D7%99%D7%A7%D7%A1%D7%98%D7%A8%D7%94).
+     * english explanation(https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm).
+     * @param rid this robot id.
+     * @param src this robot source node.
+     * @param g the graph
+     * @return
+     */
     private int nextNodeRoute(int rid, int src, Graph_Algo g) {
         int ans = -1;
         if (routes.get(rid) == null || routes.get(rid).isEmpty()) {
@@ -269,7 +267,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 Fruits f = fi.next();
                 if (!f.getOccupied()) {
                     f.setOccupied(true);
-                    f.edgdeLocator((DGraph) g._graph);
+                    f.edgeLocator((DGraph) g._graph);
                     g.shortestPath(src, f.getEdge().getDest());
                     routes.put(rid, g.shortestPath(src, f.getEdge().getDest()));
                     if (routes.get(rid).size() > 1 && routes.get(rid).get(0).getKey() == src) {
@@ -287,6 +285,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         return ans;
     }
 
+    /**
+     * drawing the score and time left for each scenario game
+     * on the client graphic user interface while the game is still running.
+     */
     public void drawScore() {
         double temp = xMax - xMin;
         double tmp = yMax - yMin;
@@ -304,6 +306,11 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
+    /**
+     * refreshing the graphic user interface all game long
+     * while the game is running the robots, score and time is always running or changing position
+     * on the graph, in order to see a clean client view we need to refresh it at all time.
+     */
     public void refreshDraw() {
         StdDraw.clear();
         drawGraph();
@@ -344,6 +351,9 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     }
 
+    /**
+     * defining the run method for this game thread
+     */
     public void run() {
         while (game.isRunning()) {
             StdDraw.enableDoubleBuffering();
