@@ -18,17 +18,17 @@ import dataStructure.node_data;
 import utils.Point3D;
 import utils.StdDraw;
 
-public class gameLogic {
+public class GameLogic {
     private game_service game;
     private DGraph g;
     private Graph_Algo ga;
-    private HashMap<Point3D, fruit> fruits;
-    private HashMap<Integer,robot> robots;
+    private HashMap<Point3D, Fruit> fruits;
+    private HashMap<Integer, Robot> robots;
     private int destNode=-1;
     private int destByMouse;
-    private robot move;
+    private Robot move;
 
-    public gameLogic(Game_Server game_server, HashMap<Point3D, fruit> allFruits, HashMap<Integer, robot> allRobots) {
+    public GameLogic(Game_Server game_server, HashMap<Point3D, Fruit> allFruits, HashMap<Integer, Robot> allRobots) {
         this.game = game_server;
         fruits=allFruits;
         robots=allRobots;
@@ -37,7 +37,7 @@ public class gameLogic {
         ga.init(g);
     }
 
-    public void update(Game_Server game_server, HashMap<Point3D, fruit> allFruits, HashMap<Integer, robot> allRobots) {
+    public void update(Game_Server game_server, HashMap<Point3D, Fruit> allFruits, HashMap<Integer, Robot> allRobots) {
         this.game=game_server;
         fruits=allFruits;
         robots=allRobots;
@@ -138,13 +138,13 @@ public class gameLogic {
         private game_service game;
         private DGraph g;
         private Graph_Algo ga;
-        private List<fruit> fruits;
-        private List<robot> robots;
+        private List<Fruit> fruits;
+        private List<Robot> robots;
         private int destNode=-1;
         private int destByMouse;
-        private robot move;
+        private Robot move;
 
-        public algoForGui(game_service game1,List<fruit> f,List<robot> p)
+        public algoForGui(game_service game1, List<Fruit> f, List<Robot> p)
         {
             this.game=game1;
             fruits=f;
@@ -159,7 +159,7 @@ public class gameLogic {
          * @param f - the update list of fruits
          * @param p - the update list of Pacman
          */
-        public  void update(game_service game1,List<fruit> f,List<robot> p)
+        public  void update(game_service game1, List<Fruit> f, List<Robot> p)
         {
             this.game=game1;
             fruits=f;

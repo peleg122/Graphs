@@ -7,7 +7,7 @@ import javax.swing.*;
 public interface Fruit {
     //constructor should be:
     // fruits(double values,int type,Point3D location){
-    //   setImage("robot.png");
+    //   setImage("robot1.png");
     //   id++;
     //   key = id;
     //   init - Values , type , pos...

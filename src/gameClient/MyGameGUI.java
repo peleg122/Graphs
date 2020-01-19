@@ -21,7 +21,6 @@ import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import gameClient.*;
 import Server.Game_Server;
 import Server.game_service;
 import algorithms.Graph_Algo;
@@ -36,8 +35,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private  game_service game;
     private int senario;
     private Graph_Algo ga;
-    private  HashMap<Point3D,fruit> fruits = new HashMap<>();
-    private HashMap<Integer, robot> robots = new HashMap<Integer, robot>();
+    private  HashMap<Point3D, Fruit> fruits = new HashMap<>();
+    private HashMap<Integer, Robot> robots = new HashMap<Integer, Robot>();
     double xMax = Double.NEGATIVE_INFINITY;
     double xMin = Double.POSITIVE_INFINITY;
     double yMax = Double.NEGATIVE_INFINITY;
@@ -74,7 +73,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             int fs=0;
             while(f_iter.hasNext()) {
                 fs++;
-                fruit f = new fruit(f_iter.next().toString());
+                Fruit f = new Fruit(f_iter.next().toString());
                 this.fruits.put(f.getLocation(), f);
                 f.edgdeLocator(g);
             }
@@ -93,10 +92,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         catch (JSONException e) {e.printStackTrace();}
         game.startGame();
         t.start();
-        porpor();
+        linearTranspose();
     }
 
-    private void porpor() {
+    private void linearTranspose() {
         for(Iterator<node_data> verIter=g.getV().iterator();verIter.hasNext();)
         {
             int point=verIter.next().getKey();
@@ -177,7 +176,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         Iterator<String> rob = log.iterator();
         while(rob.hasNext()) {
             String Json = rob.next();
-            robot robot1 = new robot(Json);
+            Robot robot1 = new Robot(Json);
             robots.put(robot1.getId(), robot1);
             StdDraw.picture(robot1.getLocation().x(), robot1.getLocation().y(), "robot1.png", 0.001, 0.001);
         }
@@ -186,7 +185,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         fruits.clear();
         Iterator<String> fruit = game.getFruits().iterator();
         while(fruit.hasNext()) {
-            fruit cf = new fruit(fruit.next());
+            Fruit cf = new Fruit(fruit.next());
             this.fruits.put(cf.getLocation(), cf);
             if(cf.getType() == 1) {
                 StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "banana.png", 0.0008, 0.0008);

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import dataStructure.DGraph;
 import utils.Point3D;
 
-public class robot {
+public class Robot {
 
     private DGraph g;
     private double value;
@@ -22,7 +22,7 @@ public class robot {
      * Default constructor.
      */
 
-    public robot(){
+    public Robot(){
         this.value = 0;
         this.id = 0;
         this.location = null;
@@ -31,7 +31,7 @@ public class robot {
         this.g = null;
     }
 
-    public robot(int value, int tag, int src, int dest, int speed, Point3D location, DGraph g, String info, String pic) {
+    public Robot(int value, int tag, int src, int dest, int speed, Point3D location, DGraph g, String info, String pic) {
         this.g = g;
         this.value = value;
         this.id = tag;
@@ -43,7 +43,7 @@ public class robot {
         this.pic = pic;
     }
 
-    public robot(int key) {
+    public Robot(int key) {
         this.value = 0;
         this.id = key;
         this.location = null;
@@ -51,7 +51,7 @@ public class robot {
         this.pic = "";
     }
 
-    public robot(String jsonSTR)
+    public Robot(String jsonSTR)
     {
         try {
             JSONObject robot = new JSONObject(jsonSTR);

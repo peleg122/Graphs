@@ -13,7 +13,7 @@ import utils.Point3D;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class fruit {
+public class Fruit {
     private static int _ID;
     private DGraph g;
     private edge_data edge;
@@ -29,7 +29,7 @@ public class fruit {
      * Default constructor.
      */
 
-    public fruit(){
+    public Fruit(){
         this.value = 0;
         this.type = 0;
         this.edge = null;
@@ -40,11 +40,11 @@ public class fruit {
         this.src = 0;
     }
 
-    public fruit(DGraph g) {
+    public Fruit(DGraph g) {
         this.g = g;
     }
 
-    public fruit(int key, int type, Point3D location, int dest, int src, DGraph g, edge_data edge, String info, String pic) {
+    public Fruit(int key, int type, Point3D location, int dest, int src, DGraph g, edge_data edge, String info, String pic) {
 
         this.g = g;
         this.value = key;
@@ -57,7 +57,7 @@ public class fruit {
         this.edge = edge;
     }
 
-    public fruit(int key) {
+    public Fruit(int key) {
         this.value = key;
         this.location = null;
         this.info = "";
@@ -68,7 +68,7 @@ public class fruit {
         this.type = 0;
     }
 
-    public fruit(String jsonSTR)    {
+    public Fruit(String jsonSTR)    {
         if(!jsonSTR.isEmpty()) {
             try {
                 JSONObject fruit = new JSONObject(jsonSTR);
@@ -96,7 +96,7 @@ public class fruit {
      * @param z     the z point of the fruit
      * @param value of the fruit
      */
-    public fruit(double x, double y, double z, double value) {
+    public Fruit(double x, double y, double z, double value) {
         _ID++;
         setLocation(new Point3D(x, y, z));
         setValue(value);
@@ -111,7 +111,7 @@ public class fruit {
      * @param value this fruit value
      * @param type  (apple(-1) || banana(1))
      */
-    public fruit(double x, double y, double z, double value, int type) {
+    public Fruit(double x, double y, double z, double value, int type) {
         _ID++;
         setLocation(new Point3D(x, y, z));
         setValue(value);
@@ -125,7 +125,7 @@ public class fruit {
      * @param value this fruit value.
      * @param type  this fruit type(apple(-1) || banana(1)).
      */
-    public fruit(Point3D P, double value, int type) {
+    public Fruit(Point3D P, double value, int type) {
         _ID++;
         setLocation(P);
         setValue(value);
@@ -137,7 +137,7 @@ public class fruit {
      *
      * @param ot create a deep copy of ot fruit
      */
-    public fruit(fruit ot) {
+    public Fruit(Fruit ot) {
         if (ot == null) throw new IllegalArgumentException("fruit cant be null");
         _ID++;
         setLocation(new Point3D(ot.getLocation()));
