@@ -572,6 +572,8 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	// default colors
 	private static final Color DEFAULT_PEN_COLOR   = BLACK;
 	private static final Color DEFAULT_CLEAR_COLOR = WHITE;
+	public static Point3D pointOfMouse;
+	public static char keyPress;
 
 	// current pen color
 	private static Color penColor;
