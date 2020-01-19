@@ -306,13 +306,15 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     public void run() {
         while (game.isRunning()) {
             StdDraw.enableDoubleBuffering();
-            refreshDraw();
-            drawGraph();
-            drawFruit();
-            drawRobot();
-            drawScore();
-            moveRobots(this.game, this.g);
-            StdDraw.show();
+            synchronized (this) {
+                refreshDraw();
+                drawGraph();
+                drawFruit();
+                drawRobot();
+                drawScore();
+                moveRobots(this.game, this.g);
+                StdDraw.show();
+            }
         }
         String results = game.toString();
         System.out.println("Game Over: " + results);
