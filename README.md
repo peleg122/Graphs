@@ -5,6 +5,11 @@ Amir Hoshen,
 Peleg Zoborovsky,
 and Jessica Blau
 
+3/5151292
+313628364
+316486786
+
+
 # About
 
 This project represent a **Directed Graph** with algorithms to manipulate the graph. On this graph there will be a game played, with robots and fruits. In this assignment we have developed a data structure, algorithms and Graphical User Interface. The assignment deals with the development of a data structure of deliberate weighted graph. After implement the Data structure, we implement algorithms such as the shortest path from source vertex to a destination vertex, if the graph is connected and several more. On top of this graph will be a game that is played with 1 or more robots that will travel on the graph to catch as many fruits as possible in the amount of time that is given. This Project contains **nine main classes**
@@ -21,8 +26,7 @@ It differs from an ordinary or undirected graph, in that the latter is defined i
  - edgeData- 
  This class represents a directed edge between two vertexes in a Directed Graph going through source vertex to destination vertex and a set of operations applicable on them.
 
- - nodeData-
- This class represents vertexes in a Directed Graph and a set of operations applicable on them.
+ - nodeData-[-\This class represents vertexes in a Directed Graph and a set of operations applicable on them.
 
  - DGraph-
  This class represents a data structure of deliberate weighted and directed graph.
