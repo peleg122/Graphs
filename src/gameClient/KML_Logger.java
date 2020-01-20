@@ -43,23 +43,23 @@ public class KML_Logger {
                         " <Style id=\"node\">\r\n" +
                         "      <IconStyle>\r\n" +
                         "        <Icon>\r\n" +
-                        "          <href>http://maps.google.com/mapfiles/kml/pal3/icon35.png</href>\r\n" +
+                        "          <href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>\r\n" +
                         "        </Icon>\r\n" +
                         "        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
                         "      </IconStyle>\r\n" +
                         "    </Style>" +
-                        " <Style id=\"fruit-banana\">\r\n" +
+                        " <Style id=\"banana\">\r\n" +
                         "      <IconStyle>\r\n" +
                         "        <Icon>\r\n" +
-                        "          <href>http://maps.google.com/mapfiles/kml/pal5/icon49.png</href>\r\n" +
+                        "          <href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href>\r\n" +
                         "        </Icon>\r\n" +
                         "        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
                         "      </IconStyle>\r\n" +
                         "    </Style>" +
-                        " <Style id=\"fruit-apple\">\r\n" +
+                        " <Style id=\"apple\">\r\n" +
                         "      <IconStyle>\r\n" +
                         "        <Icon>\r\n" +
-                        "          <href>http://maps.google.com/mapfiles/kml/pal5/icon56.png</href>\r\n" +
+                        "          <href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href>\r\n" +
                         "        </Icon>\r\n" +
                         "        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
                         "      </IconStyle>\r\n" +
@@ -67,7 +67,7 @@ public class KML_Logger {
                         " <Style id=\"robot\">\r\n" +
                         "      <IconStyle>\r\n" +
                         "        <Icon>\r\n" +
-                        "          <href>http://maps.google.com/mapfiles/kml/pal4/icon26.png></href>\r\n" +
+                        "          <href>http://maps.google.com/mapfiles/kml/shapes/heliport.png</href>\r\n" +
                         "        </Icon>\r\n" +
                         "        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
                         "      </IconStyle>\r\n" +
@@ -89,9 +89,49 @@ public class KML_Logger {
                         "      </Point>\r\n" +
                         "    </Placemark>\r\n"
         );
-
-
     }
+    public void PlaceMarkRobot(String id,String name, Point3D location) {
+        LocalDateTime time = LocalDateTime.now();
+        stringBuilder.append(
+                "    <Placemark>\r\n" +
+                        "<name>"+name+"</name>"+
+                "      <TimeStamp>\r\n" +
+                        "        <when>" + time + "</when>\r\n" +
+                        "      </TimeStamp>\r\n" +
+                        "      <styleUrl>#" + id + "</styleUrl>\r\n" +
+                        "      <Point>\r\n" +
+                        "         <coordinates>" + location.x() + "," + location.y() + "</coordinates>\r\n" +
+                        "      </Point>\r\n" +
+                        "    </Placemark>\r\n"
+        );
+    }
+
+    public void PlaceMarkPath(String id, Point3D location1, Point3D location2) {
+        stringBuilder.append(
+                "    <Placemark>\r\n" +
+                        "<name>"+id +"</name>\r\n"+
+                        "      <LineString>\r\n"+
+                        "         <coordinates>"
+                        + location1.x() + "," + location1.y() + "0 " + location2.x() + "," + location2.y() + "," + "0" +
+                        "         </coordinates>\r\n" +
+                        "      </LineString>\r\n"+
+                        "    </Placemark>\r\n"
+        );
+    }
+
+    //<Placemark>
+    //		<name>PathTest</name>
+    //		<styleUrl>#m_ylw-pushpin</styleUrl>
+    //		<LineString>
+    //			<tessellate>1</tessellate>
+    //			<coordinates>
+    //				35.19527616884682,32.10356846993754,0 35.1998796272457,32.10479130235084,0
+    //			</coordinates>
+    //		</LineString>
+    //	</Placemark>
+
+
+
 
 
     public void kmlEndAndSave() {
@@ -116,6 +156,7 @@ public class KML_Logger {
 
     /**
      * add the location of the fruits and robots to the kml file
+     *
      * @param robots
      * @param fruits
      */
@@ -126,14 +167,14 @@ public class KML_Logger {
         DateFormat df2 = new SimpleDateFormat("HH:mm:ss");
         String timeStr = df.format(date);
         String timeStr2 = df2.format(date);
-        String finalDate = timeStr+"T"+timeStr2+"Z";
+        String finalDate = timeStr + "T" + timeStr2 + "Z";
 
         for (Robot robot : robots.values()) {
             stringBuilder.append("<Placemark>\n" + "      <TimeStamp>\n" + "        <when>").append(finalDate).append("</when>\n").append("      </TimeStamp>\n").append("      <styleUrl>#hiker-icon</styleUrl>\n").append("      <Point>\n").append("        <coordinates>").append(robot.getLocation().x()).append(",").append(robot.getLocation().y()).append(",0</coordinates>\n").append("      </Point>\n").append("    </Placemark>\n");
         }
         for (Fruits fruit : fruits.values()) {
             String typer = "#paddle-a";
-            if (fruit.getType() == -1){
+            if (fruit.getType() == -1) {
                 typer = "#paddle-b";
             }
             stringBuilder.append("<Placemark>\n" + "      <TimeStamp>\n" + "        <when>").append(finalDate).append("</when>\n").append("      </TimeStamp>\n").append("      <styleUrl>").append(typer).append("</styleUrl>\n").append("      <Point>\n").append("        <coordinates>").append(fruit.getLocation().x()).append(",").append(fruit.getLocation().y()).append(",0</coordinates>\n").append("      </Point>\n").append("    </Placemark>\n");
@@ -144,16 +185,17 @@ public class KML_Logger {
 
     /**
      * save the kml file, add the finished format to the file
+     *
      * @param file_name
      */
-    public void saveToFile(String file_name){
+    public void saveToFile(String file_name) {
 
         stringBuilder.append("  </Document>\n" +
                 "</kml>");
 
         try {
             Path path = FileSystems.getDefault().getPath(".");
-            File file = new File(path.toString() +"//data//" +  file_name + ".kml");
+            File file = new File(path.toString() + "//data//" + file_name + ".kml");
             FileWriter writer = new FileWriter(file);
             writer.write(String.valueOf(stringBuilder));
             writer.close();

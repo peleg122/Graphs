@@ -23,6 +23,7 @@ import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class MyGameGUI extends JFrame implements ActionListener, MouseListener, Runnable {
@@ -30,6 +31,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private game_service game;
     private int scenario;
     private Graph_Algo ga;
+    private int PathCreatorCounter = 0;
+    private int NodeCreatorCounter = 0;
     private HashMap<Point3D, Fruits> fruits = new HashMap<>();
     private HashMap<Integer, Robot> robots = new HashMap<Integer, Robot>();
     double xMax = Double.NEGATIVE_INFINITY;
@@ -60,7 +63,19 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         StdDraw.setXscale(xMin, xMax);
         StdDraw.setYscale(yMin, yMax);
         initGame(this.scenario);
+    }
 
+    public MyGameGUI(int num) {
+        Skip(num);
+    }
+
+    public void Skip(int num) {
+        this.scenario = num;
+        this.mode = "Auto";
+        //StdDraw.setCanvasSize(1200, 1200);
+        StdDraw.setXscale(xMin, xMax);
+        StdDraw.setYscale(yMin, yMax);
+        initGame(num);
     }
 
     /**
@@ -103,7 +118,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     Fruits fruit = f.next();
                     game.addRobot(fruit.getEdge().getSrc());
                     nodeData temp = (nodeData) _g.getNode(fruit.getEdge().getSrc());
-                    kml.PlaceMark("robot", temp.getLocation());
+                    kml.PlaceMarkRobot("robot", "Robot" + a, temp.getLocation());
 
                     temp.setRobot(true);
                 } else {
@@ -155,6 +170,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 node_data n = nodes.next();
                 double x = n.getLocation().x();
                 double y = n.getLocation().y();
+                if (NodeCreatorCounter < _g.nodeSize()) {
+                    kml.PlaceMark("node", n.getLocation());
+                    NodeCreatorCounter++;
+                }
                 StdDraw.setPenRadius(0.05);
                 StdDraw.setPenColor(StdDraw.GREEN);
                 StdDraw.point(x, y);
@@ -173,6 +192,11 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     double sy = _g.getNode(edges.getSrc()).getLocation().y();
                     double dx = _g.getNode(edges.getDest()).getLocation().x();
                     double dy = _g.getNode(edges.getDest()).getLocation().y();
+                    if (PathCreatorCounter < _g.edgeSize()) {
+                        kml.PlaceMarkPath(edges.getSrc() + "To" + edges.getDest(), _g.getNode(edges.getSrc()).getLocation(),
+                                _g.getNode(edges.getDest()).getLocation());
+                        PathCreatorCounter++;
+                    }
 
                     StdDraw.setPenRadius(0.005);
                     StdDraw.setPenColor(StdDraw.BLUE);
@@ -212,8 +236,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             Robot robot1 = new Robot(Json);
             robots.put(robot1.getId(), robot1);
             StdDraw.picture(robot1.getLocation().x(), robot1.getLocation().y(), "robot1.png", 0.001, 0.001);
+            kml.PlaceMarkRobot("robot", "Robot" + robot1.getId(), robot1.getLocation());
         }
     }
+
 
     /**
      * drawing fruits on the graph.
@@ -225,9 +251,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             Fruits cf = new Fruits(fruit.next());
             this.fruits.put(cf.getLocation(), cf);
             if (cf.getType() == 1) {
-                StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "banana.png", 0.0008, 0.0008);
+
+                StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "apple.png", 0.0008, 0.0008);
+                kml.PlaceMark("apple", cf.getLocation());
             } else {
-                StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "apple.png", 0.0007, 0.0007);
+                StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "banana.png", 0.0007, 0.0007);
+                kml.PlaceMark("banana", cf.getLocation());
+
             }
         }
     }
@@ -278,30 +308,87 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      */
     private int nextNodeRoute(int rid, int src, Graph_Algo g) {
         int ans = -1;
+        Fruits temp = null;
+        double minDist = Double.MAX_VALUE;
         if (routes.get(rid) == null || routes.get(rid).isEmpty()) {
             int fs = fruits.size();
             Iterator<Fruits> fi = fruits.values().iterator();
             for (int i = 0; i < fs; i++) {
                 Fruits f = fi.next();
                 if (!f.getOccupied()) {
-                    f.setOccupied(true);
                     f.edgeLocator((DGraph) g._graph);
-                    g.shortestPath(src, f.getEdge().getDest());
-                    routes.put(rid, g.shortestPath(src, f.getEdge().getDest()));
-                    if (routes.get(rid).size() > 1 && routes.get(rid).get(0).getKey() == src) {
-                        routes.get(rid).remove(0);
-                        return routes.get(rid).remove(0).getKey();
-                    } else if (routes.get(rid).size() == 1) {
-                        return routes.get(rid).remove(0).getKey();
+                    if (g.shortestPathDist(src, f.getEdge().getDest()) < minDist) {
+                        temp = f;
                     }
                 }
             }
+            temp.setOccupied(true);
+            routes.put(rid, g.shortestPath(src, temp.getEdge().getDest()));
+            if (routes.get(rid).size() > 1 && routes.get(rid).get(0).getKey() == src) {
+                routes.get(rid).remove(0);
+                return routes.get(rid).remove(0).getKey();
+            } else if (routes.get(rid).size() == 1) {
+                if (routes.get(rid).get(0).getKey() == src)
+                    if (temp.getType() == 1)
+                        return (routes.get(rid).remove(0).getKey() - 1) % g._graph.nodeSize();
+                    else return (routes.get(rid).remove(0).getKey() + 1) % g._graph.nodeSize();
+            }
         } else {
-            if (routes.get(rid).get(0).getKey() == src) routes.get(rid).remove(0);
+            if (routes.get(rid).size() > 1) {
+                if (routes.get(rid).get(0).getKey() == src) {
+                    routes.get(rid).remove(0);
+                }
+            }
             return routes.get(rid).remove(0).getKey();
         }
         return ans;
     }
+
+//    private List<node_data> closestFruit(int src, Graph_Algo g) {
+//        double shortestPath = 99999;
+//        List<node_data> temp = null;
+//        int fs = fruits.size();
+//        Iterator<Fruits> fi = fruits.values().iterator();
+//        for (int i = 0; i < fs; i++) {
+//            Fruits f = fi.next();
+//            if (f.getType() == 1) {
+//                if (f.getEdge().getSrc() > f.getEdge().getDest()) {
+//                    if (g.shortestPathDist(src, f.getDest()) + g.shortestPathDist(f.getDest(), f.getSrc()) < shortestPath) {
+//                        shortestPath = g.shortestPathDist(src, f.getDest()) + g.shortestPathDist(f.getDest(), f.getSrc());
+//                        temp = g.shortestPath(src, f.getDest());
+//                        temp.add(g._graph.getNode(f.getSrc()));
+//                    }
+//                } else {
+//                    if (g.shortestPathDist(src, f.getSrc()) + g.shortestPathDist(f.getSrc(), f.getDest()) < shortestPath) {
+//                        shortestPath = g.shortestPathDist(src, f.getSrc()) + g.shortestPathDist(f.getSrc(), f.getDest());
+//                        temp = g.shortestPath(src, f.getSrc());
+//                        temp.add(g._graph.getNode(f.getDest()));
+//                    }
+//                }
+//            } else {
+//                if (f.getEdge().getSrc() > f.getEdge().getDest()) {
+//                    if (g.shortestPathDist(src, f.getSrc()) + g.shortestPathDist(f.getSrc(), f.getDest()) < shortestPath) {
+//                        shortestPath = g.shortestPathDist(src, f.getSrc()) + g.shortestPathDist(f.getSrc(), f.getDest());
+//                        temp = g.shortestPath(src, f.getSrc());
+//                        temp.add(g._graph.getNode(f.getDest()));
+//                    }
+//                } else {
+//                    if (g.shortestPathDist(src, f.getDest()) + g.shortestPathDist(f.getDest(), f.getSrc()) < shortestPath) {
+//                        shortestPath = g.shortestPathDist(src, f.getDest()) + g.shortestPathDist(f.getDest(), f.getSrc());
+//                        temp = g.shortestPath(src, f.getDest());
+//                        temp.add(g._graph.getNode(f.getSrc()));
+//                    }
+//                }
+//            }
+//        }
+//        return temp;
+//    }
+    /**
+     * if (g.shortestPathDist(src, f.getDest()) < shortestPath) {
+     *                         shortestPath = g.shortestPathDist(src, f.getDest());
+     *                         dest = f.getDest();
+     *                     }
+     */
 
     /**
      * drawing the score and time left for each scenario game
@@ -373,34 +460,36 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      * defining the run method for this game thread
      */
     public void run() {
+        int counter = 0;
         while (game.isRunning()) {
-            StdDraw.enableDoubleBuffering();
-            synchronized (this) {
-                refreshDraw();
-                drawGraph();
-                drawFruit();
-                drawRobot();
-                drawScore();
-                if (mode.equals("Auto")) moveRobots(this.game, this._g);
-                else {
-                    gameManualScenario(scenario);
-                    runManualScenario(game);
-                    moveRobotsManual(game);
+            while (counter % 4 == 0 && game.isRunning()) {
+                StdDraw.enableDoubleBuffering();
+                synchronized (this) {
+                    refreshDraw();
+                    drawGraph();
+                    drawFruit();
+                    drawRobot();
+                    drawScore();
+                    if (mode.equals("Auto")) moveRobots(this.game, this._g);
+                    else {
+                        gameManualScenario(scenario);
+                        runManualScenario(game);
+                        moveRobotsManual(game);
+                    }
+                    StdDraw.show();
+                    try {
+                        t.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-                StdDraw.show();
-
-                try {
-                    t.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
             }
+            counter++;
         }
         String results = game.toString();
         System.out.println("Game Over: " + results);
         kml.kmlEndAndSave();
+        StdDraw.frame.dispose();
     }
 
 
@@ -615,6 +704,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     }
 
     public static void main(String[] args) {
-        MyGameGUI junior = new MyGameGUI();
+        MyGameGUI a0 = new MyGameGUI();
     }
 }
