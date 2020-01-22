@@ -45,6 +45,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     Thread t = new Thread(this);
     private HashMap<Integer, List<node_data>> routes;
     private String mode;
+    private Data users = new Data();
 
     /**
      * creating the first view of client graphic user interface.
