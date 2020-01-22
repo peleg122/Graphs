@@ -23,6 +23,7 @@ import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadPoolExecutor;
 
 
@@ -43,19 +44,21 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     Thread t = new Thread(this);
     private HashMap<Integer, List<node_data>> routes;
-    static int rid = -1;
-    final static double EPS = 0.0002;
     private String mode;
 
     /**
      * creating the first view of client graphic user interface.
      */
     public MyGameGUI() {
-        //Game_Server.login(316486786);
+        Object[] ids = {"316486786", "305151292", "313628364"};
+        String id = (String) JOptionPane.showInputDialog(null, "Choose Id: ", "level", JOptionPane.QUESTION_MESSAGE, null, ids, null);
+        Game_Server.login(Integer.parseInt(id));
         Object[] levels = {"-1", "0", "1", "2", "3", "4", "5", "6",
-                "7", "8", "9", "10", "11", "12",
-                "13", "14", "15", "16", "17", "18",
-                "19", "20", "21", "22", "23"};
+                "7", "8", "9", "10", "11"};
+        /**
+         * "12", "13", "14", "15", "16", "17", "18",
+         * "19", "20", "21", "22", "23"
+         */
         String level = (String) JOptionPane.showInputDialog(null, "Choose Level: [0,23] ", "level", JOptionPane.QUESTION_MESSAGE, null, levels, null);
         this.scenario = Integer.parseInt(level);
         Object[] modes = {"Auto", "Manual"};
@@ -74,7 +77,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     public void Skip(int num) {
         this.scenario = num;
         this.mode = "Auto";
-        //StdDraw.setCanvasSize(1200, 1200);
         StdDraw.setXscale(xMin, xMax);
         StdDraw.setYscale(yMin, yMax);
         initGame(num);
@@ -272,7 +274,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             String Json = rob.next();
             Robot robot1 = new Robot(Json);
             robots.put(robot1.getId(), robot1);
-            StdDraw.picture(robot1.getLocation().x(), robot1.getLocation().y(), "robot1.png", 0.001, 0.001);
+            StdDraw.picture(robot1.getLocation().x(), robot1.getLocation().y(), "robot1.png", 0.0005, 0.0005);
             kml.PlaceMarkRobot("robot", "Robot" + robot1.getId(), robot1.getLocation());
         }
     }
@@ -288,10 +290,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             Fruits cf = new Fruits(fruit.next());
             this.fruits.put(cf.getLocation(), cf);
             if (cf.getType() == 1) {
-                StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "apple.png", 0.0008, 0.0008);
+                StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "apple.png", 0.0005, 0.0005);
                 kml.PlaceMark("apple", cf.getLocation());
             } else {
-                StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "banana.png", 0.0007, 0.0007);
+                StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "banana.png", 0.0005, 0.0005);
                 kml.PlaceMark("banana", cf.getLocation());
 
             }
@@ -377,7 +379,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     int dest = ttt.getInt("dest");
 
                     if (dest == -1) {
-                        dest = nextNodeRoute(rid, src, ga);//nextNode(gg, src);
+                        dest = nextNodeRoute(rid, src, ga);
                         game.chooseNextEdge(rid, dest);
                         System.out.println("Turn to node: " + dest + "  time to end:" + (t / 1000));
                         System.out.println(ttt);
@@ -557,6 +559,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      */
     public void run() {
         int counter = 0;
+        Random r = new Random();
         while (game.isRunning()) {
             while (counter % 4 == 0 && game.isRunning()) {
                 StdDraw.enableDoubleBuffering();
@@ -572,7 +575,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     }
                     StdDraw.show();
                     try {
-                        t.sleep(90);
+                        t.sleep(20);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -584,6 +587,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         System.out.println("Game Over: " + results);
         String remark = kml.kmlEndAndSave();
         game.sendKML(remark);
+        //JOptionPane.showMessageDialog(null,"Place: " + makom +" out of "+ others);
     }
 
 
