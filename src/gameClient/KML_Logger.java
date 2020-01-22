@@ -134,7 +134,7 @@ public class KML_Logger {
 
 
 
-    public void kmlEndAndSave() {
+    public String kmlEndAndSave() {
         stringBuilder.append("  \r\n</Document>\r\n" +
                 "</kml>"
         );
@@ -151,36 +151,7 @@ public class KML_Logger {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-    }
-
-    /**
-     * add the location of the fruits and robots to the kml file
-     *
-     * @param robots
-     * @param fruits
-     */
-    public void addRobotsFruits(HashMap<Integer, Robot> robots,
-                                HashMap<Point3D, Fruits> fruits) {
-        Date date = new Date();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        DateFormat df2 = new SimpleDateFormat("HH:mm:ss");
-        String timeStr = df.format(date);
-        String timeStr2 = df2.format(date);
-        String finalDate = timeStr + "T" + timeStr2 + "Z";
-
-        for (Robot robot : robots.values()) {
-            stringBuilder.append("<Placemark>\n" + "      <TimeStamp>\n" + "        <when>").append(finalDate).append("</when>\n").append("      </TimeStamp>\n").append("      <styleUrl>#hiker-icon</styleUrl>\n").append("      <Point>\n").append("        <coordinates>").append(robot.getLocation().x()).append(",").append(robot.getLocation().y()).append(",0</coordinates>\n").append("      </Point>\n").append("    </Placemark>\n");
-        }
-        for (Fruits fruit : fruits.values()) {
-            String typer = "#paddle-a";
-            if (fruit.getType() == -1) {
-                typer = "#paddle-b";
-            }
-            stringBuilder.append("<Placemark>\n" + "      <TimeStamp>\n" + "        <when>").append(finalDate).append("</when>\n").append("      </TimeStamp>\n").append("      <styleUrl>").append(typer).append("</styleUrl>\n").append("      <Point>\n").append("        <coordinates>").append(fruit.getLocation().x()).append(",").append(fruit.getLocation().y()).append(",0</coordinates>\n").append("      </Point>\n").append("    </Placemark>\n");
-        }
-
-
+        return stringBuilder.toString();
     }
 
     /**
