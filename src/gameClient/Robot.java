@@ -47,6 +47,23 @@ public class Robot {
         }
     }
 
+    public void update(String jsonSTR){
+        try {
+            JSONObject robot = new JSONObject(jsonSTR);
+            robot=robot.getJSONObject("Robot");
+            value = robot.getDouble("value");
+            this.src=robot.getInt("src");
+            this.dest=robot.getInt("dest");
+            this.speed=robot.getDouble("speed");
+            String pos=robot.getString("pos");
+            this.location=new Point3D(pos);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * setting this robot on a graph.
      * @param g
