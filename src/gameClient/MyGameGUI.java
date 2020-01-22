@@ -27,7 +27,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class MyGameGUI extends JFrame implements ActionListener, MouseListener, Runnable {
-    private DGraph _g;
+    private static DGraph _g;
     private game_service game;
     private int scenario;
     private Graph_Algo ga;
@@ -51,7 +51,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      * creating the first view of client graphic user interface.
      */
     public MyGameGUI() {
-        Object[] levels = {"0", "1", "2", "3", "4", "5", "6",
+        //Game_Server.login(316486786);
+        Object[] levels = {"-1", "0", "1", "2", "3", "4", "5", "6",
                 "7", "8", "9", "10", "11", "12",
                 "13", "14", "15", "16", "17", "18",
                 "19", "20", "21", "22", "23"};
@@ -63,6 +64,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         StdDraw.setXscale(xMin, xMax);
         StdDraw.setYscale(yMin, yMax);
         initGame(this.scenario);
+
     }
 
     public MyGameGUI(int num) {
@@ -225,6 +227,41 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
+    private void addRobots() {
+        List<String> log = game.move();
+        if (log != null) {
+            for (int i = 0; i < log.size(); i++) {
+                String robot_json = log.get(i);
+                try {
+                    JSONObject line = new JSONObject(robot_json);
+                    JSONObject ttt = line.getJSONObject("Robot");
+                    int rid = ttt.getInt("id");
+                    robots.put(rid, new Robot(robot_json));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void updateRobots() {
+        List<String> log = game.move();
+        if (log != null) {
+            for (int i = 0; i < log.size(); i++) {
+                String robot_json = log.get(i);
+                try {
+                    JSONObject line = new JSONObject(robot_json);
+                    System.out.println(robot_json);
+                    JSONObject ttt = line.getJSONObject("Robot");
+                    int rid = ttt.getInt("id");
+                    robots.get(rid).update(robot_json);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     /**
      * drawing robots on the graph.
      */
@@ -251,7 +288,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             Fruits cf = new Fruits(fruit.next());
             this.fruits.put(cf.getLocation(), cf);
             if (cf.getType() == 1) {
-
                 StdDraw.picture(cf.getLocation().x(), cf.getLocation().y(), "apple.png", 0.0008, 0.0008);
                 kml.PlaceMark("apple", cf.getLocation());
             } else {
@@ -263,12 +299,71 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     }
 
     /**
-     * moving the robots on the gui, printing the scenario log.
-     *
-     * @param game2
-     * @param gg    is a directed graph.
+     * move the robots using graph algorithms to get the most fruits
      */
-    private void moveRobots(game_service game2, DGraph gg) {
+    public void moveRobotsManual() {
+        int destNode = -1;
+        int destByMouse = -1;
+        int counter = 0;
+        List<String> log = game.move();
+        if (log != null) {
+            long t = game.timeToEnd();
+            if (StdDraw.isMousePressed())//check if there is new pressed
+            {
+                double x = StdDraw.mouseX();
+                double y = StdDraw.mouseY();
+                destNode = nextNodeManual(x, y);
+            }
+            if (destNode != -1)//if the mouse pressed at least one time
+            {
+                double minDis = Double.POSITIVE_INFINITY;
+                int index = 0;
+                for (int i = 0; i < log.size(); i++) //find the closest robots to the press
+                {
+                    counter++;
+                    String robot_json = log.get(i);
+                    try {
+                        JSONObject line = new JSONObject(robot_json);
+                        JSONObject ttt = line.getJSONObject("Robot");
+                        int rid = ttt.getInt("id");
+                        int src = ttt.getInt("src");
+                        int dest = ttt.getInt("dest");
+                        if (counter == 1) {
+                            if (ga.shortestPathDist(src, destNode) < minDis) {
+                                minDis = ga.shortestPathDist(src, destNode);
+                                index = i;
+                            }
+                            if (ga.shortestPath(src, destNode).size() == 1)
+                                destByMouse = destNode;
+                            else
+                                destByMouse = ga.shortestPath(src, destNode).get(1).getKey();
+
+                            game.chooseNextEdge(rid, destByMouse);
+                        } else {
+                            if (dest == -1) {
+                                dest = nextNodeRoute(rid, src, ga);//nextNode(gg, src);
+                                game.chooseNextEdge(rid, dest);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        System.out.println("Turn to node: " + destByMouse + "  time to end:" + (t / 1000));
+                        System.out.println((new JSONObject(log.get(index))).getJSONObject("Robot"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * moving the robots on the gui, printing the scenario log.
+     */
+    private void moveRobots() {
         List<String> log = game.move();
         if (log != null) {
             long t = game.timeToEnd();
@@ -343,6 +438,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
         return ans;
     }
+
 
 //    private List<node_data> closestFruit(int src, Graph_Algo g) {
 //        double shortestPath = 99999;
@@ -470,15 +566,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     drawFruit();
                     drawRobot();
                     drawScore();
-                    if (mode.equals("Auto")) moveRobots(this.game, this._g);
+                    if (mode.equals("Auto")) moveRobots();
                     else {
-                        gameManualScenario(scenario);
-                        runManualScenario(game);
-                        moveRobotsManual(game);
+                        moveRobotsManual();
                     }
                     StdDraw.show();
                     try {
-                        t.sleep(100);
+                        t.sleep(90);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -488,220 +582,29 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
         String results = game.toString();
         System.out.println("Game Over: " + results);
-        kml.kmlEndAndSave();
-        StdDraw.frame.dispose();
+        String remark = kml.kmlEndAndSave();
+        game.sendKML(remark);
     }
 
-
-    /**
-     * start the procces of the manual scenario given
-     *
-     * @param s
-     * @return
-     */
-    public game_service gameManualScenario(int s) {
-        scenario = s;
-        game_service game = Game_Server.getServer(s); // you have [0,23] games
-        String g = game.getGraph();
-        this.ga = new Graph_Algo(_g);
-        ga.init(g);
-        drawGraph();
-        String info = game.toString();
-        JSONObject line;
-        try {
-            line = new JSONObject(info);
-            JSONObject ttt = line.getJSONObject("GameServer");
-            int rs = ttt.getInt("robots");
-            int src_node = 0;
-
-            String[] nodes = new String[_g.nodeSize()];
-            for (int i = 0; i < _g.nodeSize(); i++) {
-                nodes[i] = "" + i;
-            }
-            for (int a = 0; a < rs; a++) {
-
-                String string = (String) JOptionPane.showInputDialog(null, "Pick node for robot " + a + "\n", "Pick starting noeds", JOptionPane.PLAIN_MESSAGE, null, nodes, "ham");
-                int node = 0;
-                try {
-                    node = Integer.parseInt(string);
-                    src_node = node;
-                } catch (Exception e) {
-                    e.getMessage();
-                }
-                game.addRobot(src_node);
-                src_node = 0;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return game;
-    }
-
-    /**
-     * by given game, run the game manualy
-     *
-     * @param game
-     */
-    public void runManualScenario(game_service game) {
-
-        Long tmpTime = game.timeToEnd();
-        KML_Logger kml = new KML_Logger();
-        game.startGame();
-        while (game.isRunning()) {
-            StdDraw.enableDoubleBuffering();
-
-            refreshDraw();
-            drawFruit();
-            drawRobot();
-
-            if (tmpTime - game.timeToEnd() > 200L) {
-                kml.addRobotsFruits(robots, fruits);
-                tmpTime = game.timeToEnd();
-            }
-
-            moveRobotsManual(game);
-            refreshDraw();
-            drawScore();
-
-            StdDraw.show();
-        }
-        askToSaveKml(kml, scenario);
-    }
-
-    /**
-     * ask the player if he wants to save the kml log of the game
-     *
-     * @param kml
-     * @param scenario
-     */
-    public void askToSaveKml(KML_Logger kml, int scenario) {
-
-        Object[] options = {"Yes",
-                "No"};
-        int n = JOptionPane.showOptionDialog(null,
-                "Would you like to save KML log of the game?",
-                "Save KML",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,     //do not use a custom Icon
-                options,  //the titles of buttons
-                options[0]); //default button title
-
-        if (n == 0) {
-            JFrame frame = new JFrame();
-            String message = "Enter file name for scenario " + scenario + ": ";
-            String filename = JOptionPane.showInputDialog(frame, message);
-            if (filename == null) {
-
-                return;
-
-            } else if (filename.isEmpty()) {
-                filename = "" + scenario;
-            }
-            try {
-                kml.saveToFile(filename);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-    }
-
-    /**
-     * move the robots using graph algorithms to get the most fruits
-     *
-     * @param game
-     */
-    public void moveRobotsManual(game_service game) {
-        List<String> log = game.move();
-        if (log != null) {
-            long t = game.timeToEnd();
-            for (int i = 0; i < log.size(); i++) {
-                String robot_json = log.get(i);
-                try {
-                    JSONObject line = new JSONObject(robot_json);
-                    JSONObject ttt = line.getJSONObject("Robot");
-                    int rid = ttt.getInt("id");
-                    int src = ttt.getInt("src");
-                    int dest = ttt.getInt("dest");
-
-                    if (dest == -1) {
-                        /* snir's shit */
-                        if (game.getRobots().size() > 1) {
-                            rid = chooseRid();
-                            if (rid == -1)
-                                return;
-                            Robot r = robots.get(rid);
-                            if (_g.getNode(r.getSrc()) != null) {
-                                src = robots.get(rid).getId();
-                            }
-                        }
-                        dest = nextNodeManual(ga._graph, src);
-                        ////////////////////
-
-                        game.chooseNextEdge(rid, dest);
-                        Robot r = robots.get(rid);
-                        r.setNode(ga._graph.getNode(dest));
-                        System.out.println("Turn to node: " + dest + "  time to end:" + (t / 1000));
-                        System.out.println(ttt);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     /**
      * by clicking the node the player want to go to, moves the chosen robot to him
      *
-     * @param g
-     * @param src
      * @return
      */
-    private static int nextNodeManual(graph g, int src) {//The manual moves
-        int ans = -1;
-        if (StdDraw.pointOfMouse != null) {
-            Point3D mouseClick = new Point3D(StdDraw.pointOfMouse);
-            for (edge_data e : g.getE(src)) {
-                if (mouseClick.distance2D(g.getNode(e.getDest()).getLocation()) < EPS)
-                    ans = e.getDest();
+    private static int nextNodeManual(double x, double y) {//The manual moves
+        double minDis = Double.POSITIVE_INFINITY;
+        int src = 0;
+        for (Iterator<node_data> verIter = _g.getV().iterator(); verIter.hasNext(); ) {
+            int nd = verIter.next().getKey();
+            if (Math.abs(x - _g.getNode(nd).getLocation().x()) + Math.abs(y - _g.getNode(nd).getLocation().y()) < minDis) {
+                minDis = Math.abs(x - _g.getNode(nd).getLocation().x()) + Math.abs(y - _g.getNode(nd).getLocation().y());
+                src = nd;
             }
         }
-        return ans;
+        return src;
     }
 
-    /**
-     * by clicking on numbers 0 - 4 the player can choose robot to move
-     *
-     * @return
-     */
-    private int chooseRid() {
-        char p = StdDraw.keyPress;
-        int rid = -1;
-        switch (p) {
-            case '0':
-                rid = 0;
-                break;
-            case '1':
-                rid = 1;
-                break;
-            case '2':
-                rid = 2;
-                break;
-            case '3':
-                rid = 3;
-                break;
-            case '4':
-                rid = 4;
-                break;
-
-            default:
-        }
-
-        return rid;
-    }
 
     public static void main(String[] args) {
         MyGameGUI a0 = new MyGameGUI();
