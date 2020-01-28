@@ -64,3 +64,4 @@ It differs from an ordinary or undirected graph, in that the latter is defined i
 
 ## Ilustration
 
+![Annotation 2020-01-28 151754](https://user-images.githubusercontent.com/44636937/73267343-88652b00-41e1-11ea-9a75-49c87458dbd3.png)
